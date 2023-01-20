@@ -89,7 +89,9 @@ public abstract class Builder
 
     protected static string[] GetScenes()
     {
-        return EditorBuildSettings.scenes.Select(s => s.path).ToArray();
+        string[] res = EditorBuildSettings.scenes.Select(s => s.path).ToArray();
+        Debug.Log($"Scenes to build: {string.Join(", ", res)}");
+        return res;
     }
 
     private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string defineSymbols,
