@@ -60,7 +60,7 @@ public class AndroidBuilder : Builder
         var buildPlayerOptions = new BuildPlayerOptions
         {
             locationPathName = locationPathName,
-            scenes = CommonBuildSettings.Scenes,
+            scenes = GetScenes(),
             target = BuildTarget.Android,
             options = BuildOptions.None
         };

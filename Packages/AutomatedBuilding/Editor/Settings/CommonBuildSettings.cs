@@ -8,6 +8,6 @@ namespace AutomatedBuilding
         public string ProjectName;
         public string DateFormat = "yy-MM-dd-HH-mm";
         public string DevAdditionalDefSymbols = "DEV";
-        public string[] Scenes;
+
     }
 }

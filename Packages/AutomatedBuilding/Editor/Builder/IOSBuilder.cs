@@ -57,7 +57,7 @@ public class IOSBuilder : Builder
         
         var buildPlayerOptions = new BuildPlayerOptions
         {
-            scenes = CommonBuildSettings.Scenes,
+            scenes = GetScenes(),
             locationPathName = buildLocation,
             target = BuildTarget.iOS,
             options = BuildOptions.None

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using AutomatedBuilding;
 using UnityEditor;
@@ -84,6 +85,11 @@ public abstract class Builder
             Directory.CreateDirectory(SETTINGS_PATH);
             AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);
         }
+    }
+
+    protected static string[] GetScenes()
+    {
+        return EditorBuildSettings.scenes.Select(s => s.path).ToArray();
     }
 
     private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string defineSymbols,
