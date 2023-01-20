@@ -1,0 +1,11 @@
+{
+  "name": "com.lionstudios.release.autobuilder",
+  "lionId": "BLD",
+  "author": "Lion Studios",
+  "displayName": "Lion Suite - Auto Builder",
+  "version": "0.0.0",
+  "description": "Auto builder module for Jenkins Jobs",
+  "unity": "2019.4",
+  "samples": [],
+  "dependencies": {}
+}

@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.lionstudios.release.autobuilder": {
+      "version": "file:AutomatedBuilding",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "1.14.18",
       "depth": 0,

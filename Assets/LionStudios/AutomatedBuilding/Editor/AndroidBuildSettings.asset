@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d456111877fd4393aef7abc621631b6c, type: 3}
+  m_Name: AndroidBuildSettings
+  m_EditorClassIdentifier: 
+  KEY_STORE_PATH: keystore/keystore.keystore
+  KEY_STORE_PASS: 
+  KEY_STORE_ALIAS: 
+  KEY_STORE_ALIAS_PASS: 
+  AdditionalDefineSymbols: 
+  DefaultBuildFolder: builds/android
