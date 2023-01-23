@@ -190,7 +190,7 @@ public abstract class Builder
     {
         if (bool.TryParse(cmdParamsMap["reimportAssets"], out var isReimport) && isReimport)
         {
-            AssetDatabase.ImportAsset("Assets/Scripts/", ImportAssetOptions.ImportRecursive |
+            AssetDatabase.ImportAsset(CommonBuildSettings.ScriptsFolder, ImportAssetOptions.ImportRecursive |
                                                          ImportAssetOptions.DontDownloadFromCacheServer);
         }
     }
