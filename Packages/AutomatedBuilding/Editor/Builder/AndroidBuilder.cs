@@ -93,10 +93,10 @@ public class AndroidBuilder : Builder
 
     private static void SetSigningKeys()
     {
-        PlayerSettings.Android.keystoreName = _androidBuildSettings.KEY_STORE_PATH;
-        PlayerSettings.Android.keyaliasName = _androidBuildSettings.KEY_STORE_ALIAS;
-        PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(_androidBuildSettings.KEY_STORE_PASS);
-        PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(_androidBuildSettings.KEY_STORE_ALIAS_PASS);
+        PlayerSettings.Android.keystoreName = _androidBuildSettings.KeystorePath;
+        PlayerSettings.Android.keyaliasName = _androidBuildSettings.KeystoreAlias;
+        PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(_androidBuildSettings.KeystorePassword);
+        PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(_androidBuildSettings.KeystoreAliasPassword);
     }
     
     [InitializeOnLoadMethod]
