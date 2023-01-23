@@ -25,8 +25,7 @@ public abstract class Builder
     
     protected abstract BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap,
         bool isProduction, string buildLocation);
-
-    protected abstract void DeleteOldBuilds(string path, int capacity = 5);
+    
     protected abstract void CreateBuildDirectory(string path);
 
     protected Builder(ICMDArgsProvider cmdArgsProvider)
@@ -59,11 +58,6 @@ public abstract class Builder
          {
              Debug.LogError($"Build Error -> {report.summary.result}");
          }
-        
-        if (isProduction)
-        {
-            DeleteOldBuilds(buildLocation);
-        }
         
         if (_isTestEditorBuild)
         {

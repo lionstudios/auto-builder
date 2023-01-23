@@ -68,13 +68,6 @@ public class AndroidBuilder : Builder
         return buildPlayerOptions;
     }
 
-    protected override void DeleteOldBuilds(string path, int capacity = 5)
-    {
-        KeepLeastRecentlyUsedFiles(path, "*.apk", capacity);
-        KeepLeastRecentlyUsedFiles(path, "*.aab", capacity);
-        KeepLeastRecentlyUsedFiles(path, "*.symbols.zip", capacity);
-    }
-
     protected override void CreateBuildDirectory(string path)
     {
         var pathToProject = Directory.GetParent(Application.dataPath)?.FullName;
@@ -115,30 +108,6 @@ public class AndroidBuilder : Builder
         PlayerSettings.Android.keyaliasName = _androidBuildSettings.KEY_STORE_ALIAS;
         PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(_androidBuildSettings.KEY_STORE_PASS);
         PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(_androidBuildSettings.KEY_STORE_ALIAS_PASS);
-    }
-
-    private static void KeepLeastRecentlyUsedFiles(string path, string extension, int capacity)
-    {
-        var heap = new SortedDictionary<DateTime, string>();
-        var files = Directory.GetFiles(path, extension, SearchOption.AllDirectories);
-
-        foreach (var file in files)
-        {
-            heap[File.GetCreationTimeUtc(file)] = file;
-        }
-
-        var numToDelete = heap.Count - capacity;
-
-        foreach (var kvp in heap)
-        {
-            if (numToDelete <= 0)
-            {
-                return;
-            }
-            
-            File.Delete(kvp.Value);
-            numToDelete--;
-        }
     }
     
     [InitializeOnLoadMethod]

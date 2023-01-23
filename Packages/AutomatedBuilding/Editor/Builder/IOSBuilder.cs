@@ -71,11 +71,6 @@ public class IOSBuilder : Builder
         return buildPlayerOptions;
     }
 
-    protected override void DeleteOldBuilds(string path, int capacity = 5)
-    {
-        KeepLeastRecentlyUsedFolders(path, capacity);
-    }
-
     protected override void CreateBuildDirectory(string path)
     {
         var pathToProject = Directory.GetParent(Application.dataPath)?.FullName;
@@ -91,38 +86,6 @@ public class IOSBuilder : Builder
         if (buildPathDi.Parent != null)
         {
             Directory.CreateDirectory(buildPathDi.Parent.FullName);
-        }
-    }
-
-    private static void KeepLeastRecentlyUsedFolders(string path, int capacity)
-    {
-        var directories = Directory.GetDirectories(path, "*BurstDebugInformation_DoNotShip",
-            SearchOption.TopDirectoryOnly);
-
-        foreach (var directory in directories)
-        {
-            Directory.Delete(directory, true);
-        }
-
-        var heap = new SortedDictionary<DateTime, string>();
-        directories = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
-
-        foreach (var directory in directories)
-        {
-            heap[File.GetCreationTimeUtc(directory)] = directory;
-        }
-
-        var numToDelete = heap.Count - capacity;
-
-        foreach (var kvp in heap)
-        {
-            if (numToDelete <= 0)
-            {
-                return;
-            }
-
-            Directory.Delete(kvp.Value, true);
-            numToDelete--;
         }
     }
 
