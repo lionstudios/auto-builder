@@ -7,12 +7,14 @@ using UnityEngine;
 
 public class AndroidBuilder : Builder
 {
+
+    protected const string ANDROID_BUILD_LOCATION = "builds/android";
     
     protected static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
     
     private static AndroidBuildSettings _androidBuildSettings;
-    
-    protected override string DefaultBuildFolder => _androidBuildSettings.DefaultBuildFolder;
+
+    protected override string BuildLocation => ANDROID_BUILD_LOCATION;
     protected override string DefineSymbols => _androidBuildSettings.AdditionalDefineSymbols;
     protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
     protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.Android;
@@ -27,8 +29,7 @@ public class AndroidBuilder : Builder
         _androidBuildSettings = null;
     }
 
-    protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction, 
-        string buildLocation)
+    protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction)
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
         {
@@ -54,7 +55,7 @@ public class AndroidBuilder : Builder
         
         var buildName = GetBuildName(cmdParamsMap);
         buildName = isProduction ? $"{buildName}.aab" : $"{buildName}.apk";
-        var locationPathName = Path.Combine(buildLocation, buildName);
+        var locationPathName = Path.Combine(BuildLocation, buildName);
 
         var buildPlayerOptions = new BuildPlayerOptions
         {

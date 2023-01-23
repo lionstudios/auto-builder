@@ -11,6 +11,5 @@ namespace AutomatedBuilding
         public string KEY_STORE_ALIAS_PASS = "";
         
         public string AdditionalDefineSymbols;
-        public string DefaultBuildFolder = "builds/android";
     }
 }

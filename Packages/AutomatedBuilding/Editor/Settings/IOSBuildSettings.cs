@@ -10,7 +10,6 @@ namespace AutomatedBuilding
         public string OrgCode = "4GT5PAZNM9";
         public string ProvisioningProfileName = "";
         public string AdditionalDefineSymbols;
-        public string DefaultBuildFolder = "builds/ios";
         
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;

@@ -13,19 +13,18 @@ public abstract class Builder
     protected const string SETTINGS_PATH = "Assets/LionStudios/AutomatedBuilding/Editor";
     protected static readonly string COMMON_SETTINGS_PATH = $"{SETTINGS_PATH}/CommonBuildSettings.asset";
     protected const string DATE_FORMAT = "yy-MM-dd-HH-mm";
-    
+
     private readonly ICMDArgsProvider _cmdArgsProvider;
     private readonly bool _isTestEditorBuild;
     
     protected static CommonBuildSettings CommonBuildSettings;
 
+    protected abstract string BuildLocation { get; }
     protected abstract string DefineSymbols { get; }
-    protected abstract string DefaultBuildFolder { get; }
     protected abstract BuildTargetGroup BuildTargetGroup { get; }
     protected abstract ScriptingImplementation ScriptingImplementation { get; }
     
-    protected abstract BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap,
-        bool isProduction, string buildLocation);
+    protected abstract BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction);
     
     protected abstract void CreateBuildDirectory(string path);
 
@@ -47,13 +46,13 @@ public abstract class Builder
         AssetDatabase.StartAssetEditing();
         
         var buildPlayerOptions = Initialize(BuildTargetGroup, DefineSymbols, ScriptingImplementation,
-            out var isProduction, out var buildLocation);
+            out var isProduction);
         
         var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         
          if (report.summary.result == BuildResult.Succeeded)
          {
-             OpenFolder(buildLocation);
+             OpenFolder(BuildLocation);
          }
          else
          {
@@ -90,7 +89,7 @@ public abstract class Builder
     }
 
     private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string defineSymbols,
-        ScriptingImplementation scriptingImplementation, out bool isProduction, out string buildLocation)
+        ScriptingImplementation scriptingImplementation, out bool isProduction)
     {
         try
         {
@@ -101,22 +100,15 @@ public abstract class Builder
                 {"versionNumber", "1"},
                 {"buildNumber", string.Empty},
                 {"buildName", string.Empty},
-                {"buildPath", string.Empty},
                 {"jdkPath", string.Empty},
                 {"reimportAssets", string.Empty},
             };
         
             SetCmdParamsMap(cmdArgs, cmdParamsMap);
-
-            if (string.IsNullOrEmpty(cmdParamsMap["buildPath"]))
-            {
-                cmdParamsMap["buildPath"] = DefaultBuildFolder;
-            }
             
             isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
-            buildLocation = GetBuildLocation(cmdParamsMap);
         
-            CreateBuildDirectory(buildLocation);
+            CreateBuildDirectory(BuildLocation);
         
             Debug.unityLogger.filterLogType = isProduction ? LogType.Error : LogType.Log;
         
@@ -127,7 +119,7 @@ public abstract class Builder
             PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
 
             CheckIfReimportRequired(cmdParamsMap);
-            var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction, buildLocation);
+            var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction);
             buildPlayerOptions.options = isProduction ? BuildOptions.None : BuildOptions.Development;
 
             return buildPlayerOptions;
@@ -188,11 +180,6 @@ public abstract class Builder
             AssetDatabase.ImportAsset(CommonBuildSettings.ScriptsFolder, ImportAssetOptions.ImportRecursive |
                                                          ImportAssetOptions.DontDownloadFromCacheServer);
         }
-    }
-
-    protected virtual string GetBuildLocation(IDictionary<string, string> cmdParamsMap)
-    {
-        return Path.Combine(cmdParamsMap["buildPath"], cmdParamsMap["environment"]);
     }
 
     private static string[] GetCustomArgs(string[] cmdArgs, string customArgsToken)

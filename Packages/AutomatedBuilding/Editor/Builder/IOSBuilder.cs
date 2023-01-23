@@ -15,12 +15,13 @@ using UnityEditor.iOS.Xcode.Extensions;
 
 public class IOSBuilder : Builder
 {
+    protected const string IOS_BUILD_LOCATION = "builds/ios";
     
     protected static readonly string IOS_SETTINGS_PATH = $"{SETTINGS_PATH}/IOSBuildSettings.asset";
     
     private static IOSBuildSettings _iosBuildSettings;
 
-    protected override string DefaultBuildFolder => _iosBuildSettings.DefaultBuildFolder;
+    protected override string BuildLocation => IOS_BUILD_LOCATION;
     protected override string DefineSymbols => _iosBuildSettings.AdditionalDefineSymbols;
     protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
     protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.iOS;
@@ -35,15 +36,7 @@ public class IOSBuilder : Builder
         _iosBuildSettings = null;
     }
 
-    protected override string GetBuildLocation(IDictionary<string, string> cmdParamsMap)
-    {
-        var parentDir = base.GetBuildLocation(cmdParamsMap);
-        var buildPath = Path.Combine(parentDir, cmdParamsMap["buildName"]);
-
-        return buildPath;
-    }
-
-    protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction, string buildLocation)
+    protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction)
     {
         if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
         {
@@ -63,7 +56,7 @@ public class IOSBuilder : Builder
         var buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = GetScenes(),
-            locationPathName = buildLocation,
+            locationPathName = BuildLocation,
             target = BuildTarget.iOS,
             options = BuildOptions.None
         };
