@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AutomatedBuilding
 {
@@ -24,13 +25,13 @@ namespace AutomatedBuilding
         public string TargetName = "Unity-iPhone";
 
         [SerializeField] Organization _organization;
-        public string ProvisioningProfileName = "";
+        [FormerlySerializedAs("ProvisioningProfileName")] public string ProvisioningProfileUUID = "";
         public string AdditionalDefineSymbols;
         
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;
         public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";
-        public string oneSignalProvisionalProfileName;
+        [FormerlySerializedAs("oneSignalProvisionalProfileName")] public string oneSignalProvisionalProfileUUID;
 
         [Header("Capabilities")] 
         public bool inAppPurchase;
