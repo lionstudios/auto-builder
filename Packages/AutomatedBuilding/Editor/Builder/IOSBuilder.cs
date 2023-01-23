@@ -157,8 +157,8 @@ public class IOSBuilder : Builder
         // string unityTargetGuid = proj.GetUnityMainTargetGuid();
         proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_STYLE", "Manual");
 
-        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgCode})");
-        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgCode})");
+        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
 
         proj.SetBuildProperty(mainTargetGuid, "USYM_UPLOAD_AUTH_TOKEN", "placeholder-Unity-iPhone");
 
@@ -170,7 +170,7 @@ public class IOSBuilder : Builder
             proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", _iosBuildSettings.ProvisioningProfileName);
         }
 
-        proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgCode);
+        proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
 
 
         if (_iosBuildSettings.usingOneSignal)
@@ -180,12 +180,12 @@ public class IOSBuilder : Builder
             proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
             proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", _iosBuildSettings.oneSignalProductIdentifier);
             proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
-            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgCode})");
-            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgCode})");
+            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
 
             proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", _iosBuildSettings.oneSignalProvisionalProfileName);
             proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", _iosBuildSettings.oneSignalProvisionalProfileName);
-            proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgCode);
+            proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
         }
 
         // Add search paths
