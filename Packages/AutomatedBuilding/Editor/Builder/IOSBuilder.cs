@@ -122,9 +122,17 @@ public class IOSBuilder : Builder
         #region Capability Manager Operations
 
         var capabilityManager = new ProjectCapabilityManager(pbxPath, entitlementFileRelativePath, targetName);
-        capabilityManager.AddPushNotifications(true);
-        capabilityManager.AddInAppPurchase();
-        capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
+        if (_iosBuildSettings.RemoteNotifications)
+        {
+            capabilityManager.AddPushNotifications(true);
+            capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
+        }
+
+        if (_iosBuildSettings.inAppPurchase)
+        {
+            capabilityManager.AddInAppPurchase();
+        }
+        
         capabilityManager.WriteToFile();
 
         #endregion

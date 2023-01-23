@@ -16,5 +16,9 @@ namespace AutomatedBuilding
         public bool usingOneSignal;
         public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";
         public string oneSignalProvisionalProfileName;
+
+        [Header("Capabilities")] 
+        public bool inAppPurchase;
+        public bool RemoteNotifications;
     }
 }
