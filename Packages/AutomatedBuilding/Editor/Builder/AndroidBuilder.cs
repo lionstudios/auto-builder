@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using AutomatedBuilding;
 using UnityEditor;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class AndroidBuilder : Builder
@@ -51,7 +50,7 @@ public class AndroidBuilder : Builder
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
         EditorUserBuildSettings.buildAppBundle = isProduction;
         PlayerSettings.Android.useCustomKeystore = isProduction;
-        SetSigningKeys(isProduction);
+        SetSigningKeys();
         
         var buildName = GetBuildName(cmdParamsMap);
         buildName = isProduction ? $"{buildName}.aab" : $"{buildName}.apk";
@@ -97,13 +96,8 @@ public class AndroidBuilder : Builder
         return buildName;
     }
 
-    private static void SetSigningKeys(bool isProduction)
+    private static void SetSigningKeys()
     {
-        if (!isProduction)
-        {
-            return;
-        }
-        
         PlayerSettings.Android.keystoreName = _androidBuildSettings.KEY_STORE_PATH;
         PlayerSettings.Android.keyaliasName = _androidBuildSettings.KEY_STORE_ALIAS;
         PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(_androidBuildSettings.KEY_STORE_PASS);
