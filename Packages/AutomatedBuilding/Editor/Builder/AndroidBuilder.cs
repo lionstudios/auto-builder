@@ -83,17 +83,11 @@ public class AndroidBuilder : Builder
         {
             return buildName;
         }
-
-        if (!string.IsNullOrEmpty(cmdParamsMap["buildNumber"]))
+        if (cmdParamsMap.TryGetValue("buildNumber", out var buildNumber))
         {
-            buildName = $"{CommonBuildSettings.ProjectName}-{DateTime.Now.ToString(CommonBuildSettings.DateFormat)}";
+            return $"{Application.productName}-{DateTime.Now.ToString(DATE_FORMAT)}-{buildNumber}";
         }
-        else
-        {
-            buildName = $"{CommonBuildSettings.ProjectName}-{DateTime.Now.ToString(CommonBuildSettings.DateFormat)}-{cmdParamsMap["buildNumber"]}";
-        }
-
-        return buildName;
+        return $"{Application.productName}-{DateTime.Now.ToString(DATE_FORMAT)}";
     }
 
     private static void SetSigningKeys()

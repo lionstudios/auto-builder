@@ -12,6 +12,7 @@ public abstract class Builder
 {
     protected const string SETTINGS_PATH = "Assets/LionStudios/AutomatedBuilding/Editor";
     protected static readonly string COMMON_SETTINGS_PATH = $"{SETTINGS_PATH}/CommonBuildSettings.asset";
+    protected const string DATE_FORMAT = "yy-MM-dd-HH-mm";
     
     private readonly ICMDArgsProvider _cmdArgsProvider;
     private readonly bool _isTestEditorBuild;
