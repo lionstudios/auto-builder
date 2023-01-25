@@ -59,7 +59,7 @@ namespace LionStudios.Editor.AutoBuilder
             var buildPlayerOptions = new BuildPlayerOptions
             {
                 scenes = GetScenes(),
-            locationPathName = BuildLocation,
+                locationPathName = Path.Combine(BuildLocation, cmdParamsMap["buildName"]),
                 target = BuildTarget.iOS,
                 options = BuildOptions.None
             };
