@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AutomatedBuilding
+namespace LionStudios.Editor.AutoBuilder
 {
     [CreateAssetMenu(fileName = "CommonBuildSettings", menuName = "Build/CreateCommonBuildSettings")]
     public class CommonBuildSettings : ScriptableObject

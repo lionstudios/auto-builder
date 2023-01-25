@@ -1,4 +1,4 @@
-﻿using AutomatedBuilding;
+﻿using LionStudios.Editor.AutoBuilder;
 using UnityEditor;
 
 public static class AutoBuilder

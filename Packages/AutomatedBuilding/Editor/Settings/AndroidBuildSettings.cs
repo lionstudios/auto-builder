@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace AutomatedBuilding
+namespace LionStudios.Editor.AutoBuilder
 {
     [CreateAssetMenu(fileName = "AndroidBuildSettings", menuName = "Build/CreateAndroidBuildSettings")]
     public class AndroidBuildSettings : ScriptableObject

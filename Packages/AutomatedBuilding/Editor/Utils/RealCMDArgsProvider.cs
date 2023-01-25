@@ -1,6 +1,6 @@
 using System;
 
-namespace AutomatedBuilding
+namespace LionStudios.Editor.AutoBuilder
 {
     public class RealCMDArgsProvider : ICMDArgsProvider
     {

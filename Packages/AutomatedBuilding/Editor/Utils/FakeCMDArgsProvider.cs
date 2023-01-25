@@ -1,4 +1,4 @@
-namespace AutomatedBuilding
+namespace LionStudios.Editor.AutoBuilder
 {
     public class FakeCMDArgsProvider : ICMDArgsProvider
     {

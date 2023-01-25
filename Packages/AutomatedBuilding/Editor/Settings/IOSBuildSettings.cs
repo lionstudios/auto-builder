@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace AutomatedBuilding
+namespace LionStudios.Editor.AutoBuilder
 {
     [CreateAssetMenu(fileName = "IOSBuildSettings", menuName = "Build/CreateIOSBuildSettings")]
     public class IOSBuildSettings : ScriptableObject
