@@ -21,7 +21,7 @@ namespace LionStudios.Editor.AutoBuilder
 
         protected static CommonBuildSettings CommonBuildSettings;
 
-        protected abstract string BuildLocation { get; }
+        protected abstract string BuildLocation { get; set; }
         protected abstract string DefineSymbols { get; }
         protected abstract BuildTargetGroup BuildTargetGroup { get; }
         protected abstract ScriptingImplementation ScriptingImplementation { get; }
@@ -109,6 +109,7 @@ namespace LionStudios.Editor.AutoBuilder
                 SetCmdParamsMap(cmdArgs, cmdParamsMap);
 
             isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
+                BuildLocation = GetBuildLocation(cmdParamsMap);
 
                 CreateBuildDirectory(BuildLocation);
 
@@ -183,7 +184,10 @@ namespace LionStudios.Editor.AutoBuilder
                                                          ImportAssetOptions.DontDownloadFromCacheServer);
             }
         }
-
+        protected virtual string GetBuildLocation(IDictionary<string, string> cmdParamsMap)
+        {
+            return Path.Combine(cmdParamsMap["buildPath"], cmdParamsMap["environment"]);
+        }
         private static string[] GetCustomArgs(string[] cmdArgs, string customArgsToken)
         {
             foreach (var cmdParam in cmdArgs)
