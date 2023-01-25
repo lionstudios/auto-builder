@@ -58,7 +58,7 @@ namespace LionStudios.Editor.AutoBuilder
 
             var buildName = GetBuildName(cmdParamsMap);
             buildName = isProduction ? $"{buildName}.aab" : $"{buildName}.apk";
-            var locationPathName = Path.Combine(BuildLocation, buildName);
+            var locationPathName = Path.Combine(BuildLocation, cmdParamsMap["environment"], buildName);
 
             var buildPlayerOptions = new BuildPlayerOptions
             {

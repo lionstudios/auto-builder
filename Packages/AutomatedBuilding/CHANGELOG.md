@@ -13,3 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.3] 
  - Rename namespace
  - Set back iOS build folder to builds/ios/<buildName>
+ 
+## [0.0.4]
+ - Set back iOS build folder to builds/ios/<environment>/<buildName> 
