@@ -76,7 +76,7 @@ namespace LionStudios.Editor.AutoBuilder
         [InitializeOnLoadMethod]
         private static void SetupProject()
         {
-            if (AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH) == null)
+            if (AssetDatabase.LoadAllAssetsAtPath(COMMON_SETTINGS_PATH).Length == 0)
             {
                 Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);

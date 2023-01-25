@@ -16,3 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 ## [0.0.4]
  - Set back iOS build folder to builds/ios/<environment>/<buildName> 
+
+## [0.0.5]
+ - Fix BuildSettings assets being reset when rebuilding Library
