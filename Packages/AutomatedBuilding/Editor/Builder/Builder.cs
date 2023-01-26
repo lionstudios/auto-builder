@@ -114,12 +114,14 @@ namespace LionStudios.Editor.AutoBuilder
 
                 Debug.unityLogger.filterLogType = isProduction ? LogType.Error : LogType.Log;
 
-                var currentDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-                currentDefineSymbols = GetDefineSymbolsStr(defineSymbols, currentDefineSymbols,
-                    CommonBuildSettings.DevAdditionalDefSymbols, isProduction);
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, currentDefineSymbols);
+                if (!string.IsNullOrEmpty(defineSymbols))
+                {
+                    var currentDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+                    currentDefineSymbols = GetDefineSymbolsStr(defineSymbols, currentDefineSymbols,
+                        CommonBuildSettings.DevAdditionalDefSymbols, isProduction);
+                    PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, currentDefineSymbols);
+                }
                 PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
-
                 CheckIfReimportRequired(cmdParamsMap);
                 var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction);
                 buildPlayerOptions.options = isProduction ? BuildOptions.None : BuildOptions.Development;
