@@ -14,7 +14,6 @@ using UnityEditor.iOS.Xcode.Extensions;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-
     public class IOSBuilder : Builder
     {
         protected const string IOS_BUILD_LOCATION = "builds/ios";
@@ -38,7 +37,8 @@ namespace LionStudios.Editor.AutoBuilder
             _iosBuildSettings = null;
         }
 
-    protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction)
+        protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap,
+            bool isProduction)
         {
             if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
             {
@@ -161,17 +161,22 @@ namespace LionStudios.Editor.AutoBuilder
             // string unityTargetGuid = proj.GetUnityMainTargetGuid();
             proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_STYLE", "Manual");
 
-        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
-        proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+            proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY",
+                $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+            proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]",
+                $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
 
             proj.SetBuildProperty(mainTargetGuid, "USYM_UPLOAD_AUTH_TOKEN", "placeholder-Unity-iPhone");
 
             // Needs to be called twice in a row for XCode to take it into account. Do not remove.
             for (int i = 0; i < 2; i++)
             {
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", _iosBuildSettings.ProvisioningProfileUUID);
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", _iosBuildSettings.ProvisioningProfileUUID);
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", _iosBuildSettings.ProvisioningProfileUUID);
+                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
+                    _iosBuildSettings.ProvisioningProfileName);
+                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP",
+                    _iosBuildSettings.ProvisioningProfileName);
+                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE",
+                    _iosBuildSettings.ProvisioningProfileName);
             }
 
             proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
@@ -182,13 +187,18 @@ namespace LionStudios.Editor.AutoBuilder
                 // Set Manual Provisioning Profiles One Signal Notification Service Extension
                 string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
                 proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
-            proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", _iosBuildSettings.oneSignalProductIdentifier);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER",
+                    _iosBuildSettings.oneSignalProductIdentifier);
                 proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
-            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
-            proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY",
+                    $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]",
+                    $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
 
-            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", _iosBuildSettings.oneSignalProvisionalProfileUUID);
-            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", _iosBuildSettings.oneSignalProvisionalProfileUUID);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
+                    _iosBuildSettings.oneSignalProvisionalProfileName);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
+                    _iosBuildSettings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
             }
 
@@ -210,9 +220,20 @@ namespace LionStudios.Editor.AutoBuilder
             proj.SetBuildProperty(targetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "NO");
             proj.SetBuildProperty(mainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
 
+            #region Additional Settings
+
+            if (!string.IsNullOrEmpty(_iosBuildSettings.explicitSwiftVersion))
+            {
+                proj.SetBuildProperty(mainTargetGuid, "SWIFT_VERSION", _iosBuildSettings.explicitSwiftVersion);
+                proj.SetBuildProperty(targetGuid, "SWIFT_VERSION", _iosBuildSettings.explicitSwiftVersion);
+            }
+
+            #endregion
+
             File.WriteAllText(pbxPath, proj.WriteToString());
 
             #endregion
+
 
             #region Info Plist Operations
 
@@ -220,9 +241,12 @@ namespace LionStudios.Editor.AutoBuilder
             var plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
             PlistElementDict rootDict = plist.root;
-        rootDict.SetString("NSLocationWhenInUseUsageDescription", "Detect user location which is shown in leaderboard.");
-        rootDict.SetString("NSLocationAlwaysUsageDescription", "Detect user location which is shown in leaderboard.");
-        rootDict.SetString("NSUserTrackingUsageDescription", "This only uses device info for more interesting and relevant ads");
+            rootDict.SetString("NSLocationWhenInUseUsageDescription",
+                "Detect user location which is shown in leaderboard.");
+            rootDict.SetString("NSLocationAlwaysUsageDescription",
+                "Detect user location which is shown in leaderboard.");
+            rootDict.SetString("NSUserTrackingUsageDescription",
+                "This only uses device info for more interesting and relevant ads");
             rootDict.SetString("CFBundleShortVersionString", PlayerSettings.bundleVersion);
             rootDict.SetString("CFBundleVersion", PlayerSettings.iOS.buildNumber);
 
@@ -322,5 +346,4 @@ namespace LionStudios.Editor.AutoBuilder
 
         #endregion
     }
-
 }

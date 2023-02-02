@@ -13,13 +13,11 @@ MonoBehaviour:
   m_Name: IOSBuildSettings
   m_EditorClassIdentifier: 
   TargetName: Unity-iPhone
-  OrgName: Lion Studios LLC
-  OrgCode: 4GT5PAZNM9
-  ProvisioningProfileName: 
+  _organization: 0
+  ProvisioningProfileUUID: 
   AdditionalDefineSymbols: 
-  DefaultBuildFolder: builds/ios
   usingOneSignal: 0
   oneSignalProductIdentifier: <yourbundleid>.OneSignalNotificationServiceExtension
-  oneSignalProvisionalProfileName: 
+  oneSignalProvisionalProfileUUID: 
   inAppPurchase: 0
   RemoteNotifications: 0

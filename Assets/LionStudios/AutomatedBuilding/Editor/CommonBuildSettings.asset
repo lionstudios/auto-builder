@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9710290750e84a63928b2833d6eeac03, type: 3}
   m_Name: CommonBuildSettings
   m_EditorClassIdentifier: 
-  ProjectName: 
-  DateFormat: yy-MM-dd-HH-mm
   DevAdditionalDefSymbols: DEV
-  Scenes: []
+  ScriptsFolder: Assets/Scripts/

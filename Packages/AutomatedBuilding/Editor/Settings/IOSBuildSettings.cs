@@ -25,17 +25,19 @@ namespace LionStudios.Editor.AutoBuilder
         public string TargetName = "Unity-iPhone";
 
         [SerializeField] Organization _organization;
-        [FormerlySerializedAs("ProvisioningProfileName")] public string ProvisioningProfileUUID = "";
+        [FormerlySerializedAs("ProvisioningProfileName")] public string ProvisioningProfileName = "";
         public string AdditionalDefineSymbols;
         
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;
         public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";
-        [FormerlySerializedAs("oneSignalProvisionalProfileName")] public string oneSignalProvisionalProfileUUID;
+        [FormerlySerializedAs("oneSignalProvisionalProfileName")] public string oneSignalProvisionalProfileName;
 
         [Header("Capabilities")] 
         public bool inAppPurchase;
         public bool RemoteNotifications;
+
+        [Header("Additional Settings")] public string explicitSwiftVersion;
         
         public string OrgName => ORGS_INFOS[_organization].Name;
         public string OrgTeamId => ORGS_INFOS[_organization].TeamId;

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.lionstudios.release.autobuilder": {
+    "com.lionstudios.local.autobuilder": {
       "version": "file:AutomatedBuilding",
       "depth": 0,
       "source": "embedded",

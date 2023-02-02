@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d456111877fd4393aef7abc621631b6c, type: 3}
   m_Name: AndroidBuildSettings
   m_EditorClassIdentifier: 
-  KEY_STORE_PATH: keystore/keystore.keystore
-  KEY_STORE_PASS: 
-  KEY_STORE_ALIAS: 
-  KEY_STORE_ALIAS_PASS: 
+  KeystorePath: keystore/keystore.keystore
+  KeystorePassword: 
+  KeystoreAlias: 
+  KeystoreAliasPassword: 
   AdditionalDefineSymbols: 
-  DefaultBuildFolder: builds/android
