@@ -22,3 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.6]
  - Fix build symbols addition optional when values are null
+
+## [0.0.7]
+ - Fix manual builds

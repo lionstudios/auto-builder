@@ -19,7 +19,16 @@ namespace LionStudios.Editor.AutoBuilder
         private readonly ICMDArgsProvider _cmdArgsProvider;
         private readonly bool _isTestEditorBuild;
 
-        protected static CommonBuildSettings CommonBuildSettings;
+        protected static CommonBuildSettings _commonBuildSettings;
+        protected static CommonBuildSettings CommonBuildSettings
+        {
+            get
+            {
+                if (_commonBuildSettings == null)
+                    _commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
+                return _commonBuildSettings;
+            }
+        }
 
         protected abstract string BuildLocation { get; }
         protected abstract string DefineSymbols { get; }
@@ -34,13 +43,11 @@ namespace LionStudios.Editor.AutoBuilder
         {
             _cmdArgsProvider = cmdArgsProvider;
             _isTestEditorBuild = cmdArgsProvider is FakeCMDArgsProvider;
-
-            CommonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
         }
 
         ~Builder()
         {
-            CommonBuildSettings = null;
+            _commonBuildSettings = null;
         }
 
         public void Build()
