@@ -26,7 +26,6 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         protected override string BuildLocation => ANDROID_BUILD_LOCATION;
-        protected override string DefineSymbols => AndroidBuildSettings.AdditionalDefineSymbols;
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.Android;
 

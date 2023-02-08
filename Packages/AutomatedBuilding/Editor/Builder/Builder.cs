@@ -13,8 +13,10 @@ namespace LionStudios.Editor.AutoBuilder
     public abstract class Builder
     {
         protected const string SETTINGS_PATH = "Assets/LionStudios/AutomatedBuilding/Editor";
-        protected static readonly string COMMON_SETTINGS_PATH = $"{SETTINGS_PATH}/CommonBuildSettings.asset";
         protected const string DATE_FORMAT = "yy-MM-dd-HH-mm";
+        
+        public static readonly string COMMON_SETTINGS_PATH = $"{SETTINGS_PATH}/CommonBuildSettings.asset";
+        public static readonly string FAKE_CMD_ARGS_PATH = $"{SETTINGS_PATH}/FakeCMDArgs.asset";//
 
         private readonly ICMDArgsProvider _cmdArgsProvider;
         private readonly bool _isTestEditorBuild;
@@ -31,7 +33,6 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         protected abstract string BuildLocation { get; }
-        protected abstract string DefineSymbols { get; }
         protected abstract BuildTargetGroup BuildTargetGroup { get; }
         protected abstract ScriptingImplementation ScriptingImplementation { get; }
 
@@ -52,32 +53,40 @@ namespace LionStudios.Editor.AutoBuilder
 
         public void Build()
         {
-            AssetDatabase.StartAssetEditing();
-
-            var buildPlayerOptions = Initialize(BuildTargetGroup, DefineSymbols, ScriptingImplementation,
-                out var isProduction);
-
-            var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-
-            if (report.summary.result == BuildResult.Succeeded)
+            try
             {
-                OpenFolder(BuildLocation);
-            }
-            else
-            {
-                Debug.LogError($"Build Error -> {report.summary.result}");
-            }
+                AssetDatabase.StartAssetEditing();
+                
+                var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols, 
+                    ScriptingImplementation, out var isProduction);
 
-            if (_isTestEditorBuild)
-            {
-                OpenFolder(buildPlayerOptions.locationPathName);
+                var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+                
+                if (report.summary.result == BuildResult.Succeeded)
+                {
+                    OpenFolder(BuildLocation);
+                }
+                else
+                {
+                    Debug.LogError($"Build Error -> {report.summary.result}");
+                }
+                
+                if (_isTestEditorBuild)
+                {
+                    OpenFolder(buildPlayerOptions.locationPathName);
+                }
+                else
+                {
+                    EditorApplication.Exit(report.summary.result == BuildResult.Succeeded ? 0 : 2);
+                }
+                
+                AssetDatabase.StopAssetEditing();
             }
-            else
+            catch (Exception e)
             {
-                EditorApplication.Exit(report.summary.result == BuildResult.Succeeded ? 0 : 2);
+                AssetDatabase.StopAssetEditing();
+                Debug.LogError(e.Message);
             }
-
-            AssetDatabase.StopAssetEditing();
         }
 
         [InitializeOnLoadMethod]
@@ -87,6 +96,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);
+                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<FakeCMDArgsProvider>(), FAKE_CMD_ARGS_PATH);
             }
         }
 
@@ -97,7 +107,7 @@ namespace LionStudios.Editor.AutoBuilder
             return res;
         }
 
-        private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string defineSymbols,
+        private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string[] devAdditionalDefSymbols, 
             ScriptingImplementation scriptingImplementation, out bool isProduction)
         {
             try
@@ -121,13 +131,13 @@ namespace LionStudios.Editor.AutoBuilder
 
                 Debug.unityLogger.filterLogType = isProduction ? LogType.Error : LogType.Log;
 
-                if (!string.IsNullOrEmpty(defineSymbols))
+                if (devAdditionalDefSymbols != null && devAdditionalDefSymbols.Length > 0) 
                 {
                     var currentDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-                    currentDefineSymbols = GetDefineSymbolsStr(defineSymbols, currentDefineSymbols,
-                        CommonBuildSettings.DevAdditionalDefSymbols, isProduction);
+                    currentDefineSymbols = GetDefineSymbolsStr(devAdditionalDefSymbols, currentDefineSymbols, isProduction);
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, currentDefineSymbols);
                 }
+                
                 PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
                 CheckIfReimportRequired(cmdParamsMap);
                 var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction);
@@ -142,12 +152,10 @@ namespace LionStudios.Editor.AutoBuilder
             }
         }
 
-        private static string GetDefineSymbolsStr(string newDefineSymbols, string currentDefineSymbols,
-            string devDefineSymbols, bool isProduction)
+        private static string GetDefineSymbolsStr(string[] additionalSymbols, string currentDefineSymbols, 
+            bool isProduction)
         {
             var currentSymbolsArr = currentDefineSymbols.Split(';');
-            var newDefineSymbolsArr = newDefineSymbols.Split(';');
-            var devDefineSymbolsArr = devDefineSymbols.Split(';');
             var set = new HashSet<string>();
             var sb = new StringBuilder();
 
@@ -156,24 +164,9 @@ namespace LionStudios.Editor.AutoBuilder
                 set.Add(symbol);
             }
 
-            foreach (var symbol in newDefineSymbolsArr)
+            foreach (var symbol in additionalSymbols)
             {
                 set.Add(symbol);
-            }
-
-            if (isProduction)
-            {
-                foreach (var symbol in devDefineSymbolsArr)
-                {
-                    set.Remove(symbol);
-                }
-            }
-            else
-            {
-                foreach (var symbol in devDefineSymbolsArr)
-                {
-                    set.Add(symbol);
-                }
             }
 
             foreach (var symbol in set)
@@ -184,7 +177,7 @@ namespace LionStudios.Editor.AutoBuilder
             return sb.ToString();
         }
 
-        private static void CheckIfReimportRequired(IDictionary<string, string> cmdParamsMap)
+        private void CheckIfReimportRequired(IDictionary<string, string> cmdParamsMap)
         {
             if (bool.TryParse(cmdParamsMap["reimportAssets"], out var isReimport) && isReimport)
             {
@@ -307,7 +300,7 @@ namespace LionStudios.Editor.AutoBuilder
                 e.HelpLink = ""; // do anything with this variable to silence warning about not using it
             }
         }
-#endif
+#endif 
     }
 
 }

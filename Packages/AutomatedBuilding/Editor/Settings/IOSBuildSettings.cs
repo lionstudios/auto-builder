@@ -4,12 +4,12 @@ using UnityEngine.Serialization;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    [CreateAssetMenu(fileName = "IOSBuildSettings", menuName = "Build/CreateIOSBuildSettings")]
+    [CreateAssetMenu(fileName = "IOSBuildSettings", menuName = "AutoBuilder/CreateIOSBuildSettings")]
     public class IOSBuildSettings : ScriptableObject
     {
-        
-        enum Organization { LionStudios, LionStudiosPlus, Hippotap }
-        class OrgInfo 
+        private enum Organization { LionStudios, LionStudiosPlus, Hippotap }
+
+        private class OrgInfo 
         { 
             public string Name;
             public string TeamId;
@@ -26,8 +26,7 @@ namespace LionStudios.Editor.AutoBuilder
 
         [SerializeField] Organization _organization;
         [FormerlySerializedAs("ProvisioningProfileName")] public string ProvisioningProfileUUID = "";
-        public string AdditionalDefineSymbols;
-        
+
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;
         public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";

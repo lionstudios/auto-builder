@@ -33,7 +33,6 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         protected override string BuildLocation => IOS_BUILD_LOCATION;
-        protected override string DefineSymbols => iosBuildSettings.AdditionalDefineSymbols;
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.iOS;
 
