@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    [CreateAssetMenu(fileName = "AndroidBuildSettings", menuName = "Build/CreateAndroidBuildSettings")]
+    [CreateAssetMenu(fileName = "AndroidBuildSettings", menuName = "AutoBuilder/CreateAndroidBuildSettings")]
     public class AndroidBuildSettings : ScriptableObject
     {
         [FormerlySerializedAs("KEY_STORE_PATH")]
@@ -14,7 +14,5 @@ namespace LionStudios.Editor.AutoBuilder
         public string KeystoreAlias = "";
         [FormerlySerializedAs("KEY_STORE_ALIAS_PASS")]
         public string KeystoreAliasPassword = "";
-        
-        public string AdditionalDefineSymbols;
     }
 }

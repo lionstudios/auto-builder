@@ -20,14 +20,18 @@ public static class AutoBuilder
     [MenuItem("Build/Android")]
     public static void BuildAndroidTest()
     {
-        _builder = new AndroidBuilder(new FakeCMDArgsProvider());
+        var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
+        
+        _builder = new AndroidBuilder(fakeCMDArgsProvider);
         _builder.Build();
     }
 
     [MenuItem("Build/iOS")]
     public static void BuildIOSTest()
     {
-        _builder = new IOSBuilder(new FakeCMDArgsProvider());
+        var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
+        
+        _builder = new IOSBuilder(fakeCMDArgsProvider);
         _builder.Build();
     }
 }

@@ -9,28 +9,19 @@ namespace LionStudios.Editor.AutoBuilder
     
     public class AndroidBuilder : Builder
     {
-
         protected const string ANDROID_BUILD_LOCATION = "builds/android";
-
         protected static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
 
         private static AndroidBuildSettings _androidBuildSettings;
-        protected static AndroidBuildSettings AndroidBuildSettings
-        {
-            get
-            {
-                if (_androidBuildSettings == null)
-                    _androidBuildSettings = AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH);
-                return _androidBuildSettings;
-            }
-        }
 
         protected override string BuildLocation => ANDROID_BUILD_LOCATION;
-        protected override string DefineSymbols => AndroidBuildSettings.AdditionalDefineSymbols;
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.Android;
 
-        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider) { }
+        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider)
+        {
+            _androidBuildSettings = AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH);
+        }
 
         ~AndroidBuilder()
         {
@@ -102,10 +93,10 @@ namespace LionStudios.Editor.AutoBuilder
 
         private static void SetSigningKeys()
         {
-            PlayerSettings.Android.keystoreName = AndroidBuildSettings.KeystorePath;
-            PlayerSettings.Android.keyaliasName = AndroidBuildSettings.KeystoreAlias;
-            PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(AndroidBuildSettings.KeystorePassword);
-            PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(AndroidBuildSettings.KeystoreAliasPassword);
+            PlayerSettings.Android.keystoreName = _androidBuildSettings.KeystorePath;
+            PlayerSettings.Android.keyaliasName = _androidBuildSettings.KeystoreAlias;
+            PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(_androidBuildSettings.KeystorePassword);
+            PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(_androidBuildSettings.KeystoreAliasPassword);
         }
 
         [InitializeOnLoadMethod]
@@ -114,7 +105,7 @@ namespace LionStudios.Editor.AutoBuilder
             if (AssetDatabase.LoadAllAssetsAtPath(ANDROID_SETTINGS_PATH).Length == 0)
             {
                 Directory.CreateDirectory(SETTINGS_PATH);
-            AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
+                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
             }
         }
 
