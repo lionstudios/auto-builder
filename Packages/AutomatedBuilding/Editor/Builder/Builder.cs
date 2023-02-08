@@ -22,26 +22,18 @@ namespace LionStudios.Editor.AutoBuilder
         private readonly bool _isTestEditorBuild;
 
         protected static CommonBuildSettings _commonBuildSettings;
-        protected static CommonBuildSettings CommonBuildSettings
-        {
-            get
-            {
-                if (_commonBuildSettings == null)
-                    _commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
-                return _commonBuildSettings;
-            }
-        }
 
         protected abstract string BuildLocation { get; }
         protected abstract BuildTargetGroup BuildTargetGroup { get; }
         protected abstract ScriptingImplementation ScriptingImplementation { get; }
 
-    protected abstract BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction);
+        protected abstract BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction);
 
         protected abstract void CreateBuildDirectory(string path);
 
         protected Builder(ICMDArgsProvider cmdArgsProvider)
         {
+            _commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
             _cmdArgsProvider = cmdArgsProvider;
             _isTestEditorBuild = cmdArgsProvider is FakeCMDArgsProvider;
         }
@@ -57,7 +49,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 AssetDatabase.StartAssetEditing();
                 
-                var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols, 
+                var buildPlayerOptions = Initialize(BuildTargetGroup, _commonBuildSettings.DevAdditionalDefSymbols, 
                     ScriptingImplementation, out var isProduction);
 
                 var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
@@ -92,14 +84,15 @@ namespace LionStudios.Editor.AutoBuilder
         [InitializeOnLoadMethod]
         private static void SetupProject()
         {
-            if (AssetDatabase.LoadAllAssetsAtPath(COMMON_SETTINGS_PATH).Length == 0)
+            Directory.CreateDirectory(SETTINGS_PATH);
+            
+            if (AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH) == null)
             {
-                Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);
             }
-            if (AssetDatabase.LoadAllAssetsAtPath(FAKE_CMD_ARGS_PATH).Length == 0)
+            
+            if (AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(FAKE_CMD_ARGS_PATH) == null)
             {
-                Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<FakeCMDArgsProvider>(), FAKE_CMD_ARGS_PATH);
             }
         }
@@ -184,8 +177,8 @@ namespace LionStudios.Editor.AutoBuilder
         {
             if (bool.TryParse(cmdParamsMap["reimportAssets"], out var isReimport) && isReimport)
             {
-                AssetDatabase.ImportAsset(CommonBuildSettings.ScriptsFolder, ImportAssetOptions.ImportRecursive |
-                                                         ImportAssetOptions.DontDownloadFromCacheServer);
+                AssetDatabase.ImportAsset(_commonBuildSettings.ScriptsFolder, ImportAssetOptions.ImportRecursive |
+                                                                              ImportAssetOptions.DontDownloadFromCacheServer);
             }
         }
 
