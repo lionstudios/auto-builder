@@ -25,3 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.7]
  - Fix manual builds
+
+## [0.0.8]
+- Remove additional define symbols
+- External FakeCMDArgsProvider settings
+- Remove jdkPath argument
+- Remove Create menus for settings
