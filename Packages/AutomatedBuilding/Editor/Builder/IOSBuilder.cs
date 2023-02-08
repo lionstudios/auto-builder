@@ -181,9 +181,9 @@ namespace LionStudios.Editor.AutoBuilder
             // Needs to be called twice in a row for XCode to take it into account. Do not remove.
             for (int i = 0; i < 2; i++)
             {
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.ProvisioningProfileUUID);
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileUUID);
-            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", iosBuildSettings.ProvisioningProfileUUID);
+            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.ProvisioningProfileName);
+            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileName);
+            proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", iosBuildSettings.ProvisioningProfileName);
             }
 
             proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
@@ -199,8 +199,8 @@ namespace LionStudios.Editor.AutoBuilder
             proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
             proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
 
-            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.oneSignalProvisionalProfileUUID);
-            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.oneSignalProvisionalProfileUUID);
+            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.oneSignalProvisionalProfileName);
+            proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
             }
 
