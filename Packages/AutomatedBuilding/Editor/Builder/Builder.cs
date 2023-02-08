@@ -96,6 +96,10 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);
+            }
+            if (AssetDatabase.LoadAllAssetsAtPath(FAKE_CMD_ARGS_PATH).Length == 0)
+            {
+                Directory.CreateDirectory(SETTINGS_PATH);
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<FakeCMDArgsProvider>(), FAKE_CMD_ARGS_PATH);
             }
         }
@@ -119,7 +123,6 @@ namespace LionStudios.Editor.AutoBuilder
                     { "versionNumber", "1" },
                     { "buildNumber", string.Empty },
                     { "buildName", string.Empty },
-                    { "jdkPath", string.Empty },
                     { "reimportAssets", string.Empty },
                 };
 

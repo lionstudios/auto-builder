@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    [CreateAssetMenu(fileName = "IOSBuildSettings", menuName = "AutoBuilder/CreateIOSBuildSettings")]
+    
     public class IOSBuildSettings : ScriptableObject
     {
         private enum Organization { LionStudios, LionStudiosPlus, Hippotap }

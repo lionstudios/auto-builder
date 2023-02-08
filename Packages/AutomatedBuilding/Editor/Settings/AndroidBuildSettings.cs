@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    [CreateAssetMenu(fileName = "AndroidBuildSettings", menuName = "AutoBuilder/CreateAndroidBuildSettings")]
+    
     public class AndroidBuildSettings : ScriptableObject
     {
         [FormerlySerializedAs("KEY_STORE_PATH")]

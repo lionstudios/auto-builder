@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    [CreateAssetMenu(fileName = "FakeCMDArgsProvider", menuName = "AutoBuilder/FakeCMDArgsProvider")]
+    
     public class FakeCMDArgsProvider : ScriptableObject , ICMDArgsProvider
     {
         public enum Environment
@@ -14,7 +14,6 @@ namespace LionStudios.Editor.AutoBuilder
         public Environment environment;
         public string versionNumber = "2.2.4";
         public string buildNumber = "159";
-        public string jdkPath = "";
 
         string[] ICMDArgsProvider.Args
         {
@@ -24,7 +23,7 @@ namespace LionStudios.Editor.AutoBuilder
                 {
                     "-blah",
                     "_batchmode",
-                    $"-Args:environment={environment};versionNumber={versionNumber};buildNumber={buildNumber};buildName={versionNumber}({buildNumber});jdkPath={jdkPath};reimportAssets=true;"
+                    $"-Args:environment={environment};versionNumber={versionNumber};buildNumber={buildNumber};buildName={versionNumber}({buildNumber});reimportAssets=true;"
                 };
             }
         }
