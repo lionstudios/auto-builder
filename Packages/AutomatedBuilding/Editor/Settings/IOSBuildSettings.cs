@@ -25,12 +25,12 @@ namespace LionStudios.Editor.AutoBuilder
         public string TargetName = "Unity-iPhone";
 
         [SerializeField] Organization _organization;
-        [FormerlySerializedAs("ProvisioningProfileName")] public string ProvisioningProfileUUID = "";
+        public string ProvisioningProfileName = "";
 
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;
         public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";
-        [FormerlySerializedAs("oneSignalProvisionalProfileName")] public string oneSignalProvisionalProfileUUID;
+        public string oneSignalProvisionalProfileName;
 
         [Header("Capabilities")] 
         public bool inAppPurchase;
