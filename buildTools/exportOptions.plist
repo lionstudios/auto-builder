@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>method</key>
+    <string>app-store</string>
+    <key>provisioningProfiles</key>
+    <dict>
+      <key>com.lionstudios.kingwing</key>
+      <string>5e87ba02-6856-448e-8625-77d80ff13167</string>
+      <key>com.lionstudios.kingwing.onesignal</key>
+      <string>718a9590-0529-4d57-95b3-5d2b9ff0ccb4</string>
+    </dict>
+    <key>teamID</key>
+    <string>4QA754R8JN</string>
+    <key>uploadSymbols</key>
+    <true />
+  </dict>
+</plist>

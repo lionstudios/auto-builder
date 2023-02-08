@@ -22,9 +22,23 @@ namespace LionStudios.Editor.AutoBuilder
 
         private static IOSBuildSettings _iosBuildSettings;
 
+        public static IOSBuildSettings iosBuildSettings
+        {
+            get
+            {
+                if (_iosBuildSettings == null)
+                    _iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                return _iosBuildSettings;
+            }
+        }
+
+
         protected override string BuildLocation => IOS_BUILD_LOCATION;
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.iOS;
+
+        private const string EXPORT_OPTIONS_PATH = "buildTools/";
+        private const string PROVISIONING_PROFILE_PATH = "ProvisioningProfiles/";
 
         public IOSBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider)
         {
@@ -109,7 +123,7 @@ namespace LionStudios.Editor.AutoBuilder
             char separator = Path.DirectorySeparatorChar;
 
             string pbxPath = PBXProject.GetPBXProjectPath(path);
-            string targetName = _iosBuildSettings.TargetName;
+            string targetName = iosBuildSettings.TargetName;
             string entitlementFileName = $"{targetName}.entitlements";
             string entitlementFileRelativePath = $"{targetName}{separator}{entitlementFileName}";
             string entitlementFilePath = $"{path}{separator}{entitlementFileRelativePath}";
@@ -117,13 +131,13 @@ namespace LionStudios.Editor.AutoBuilder
             #region Capability Manager Operations
 
             var capabilityManager = new ProjectCapabilityManager(pbxPath, entitlementFileRelativePath, targetName);
-            if (_iosBuildSettings.RemoteNotifications)
+            if (iosBuildSettings.RemoteNotifications)
             {
                 capabilityManager.AddPushNotifications(true);
                 capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
             }
 
-            if (_iosBuildSettings.inAppPurchase)
+            if (iosBuildSettings.inAppPurchase)
             {
                 capabilityManager.AddInAppPurchase();
             }
@@ -160,9 +174,9 @@ namespace LionStudios.Editor.AutoBuilder
             proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_STYLE", "Manual");
 
             proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY",
-                $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
             proj.SetBuildProperty(mainTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]",
-                $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
 
             proj.SetBuildProperty(mainTargetGuid, "USYM_UPLOAD_AUTH_TOKEN", "placeholder-Unity-iPhone");
 
@@ -170,34 +184,34 @@ namespace LionStudios.Editor.AutoBuilder
             for (int i = 0; i < 2; i++)
             {
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
-                    _iosBuildSettings.ProvisioningProfileUUID);
+                    iosBuildSettings.ProvisioningProfileName);
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP",
-                    _iosBuildSettings.ProvisioningProfileUUID);
+                    iosBuildSettings.ProvisioningProfileName);
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE",
-                    _iosBuildSettings.ProvisioningProfileUUID);
+                    iosBuildSettings.ProvisioningProfileName);
             }
 
-            proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
+            proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
 
 
-            if (_iosBuildSettings.usingOneSignal)
+            if (iosBuildSettings.usingOneSignal)
             {
                 // Set Manual Provisioning Profiles One Signal Notification Service Extension
                 string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
                 proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
                 proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER",
-                    _iosBuildSettings.oneSignalProductIdentifier);
+                    iosBuildSettings.oneSignalProductIdentifier);
                 proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY",
-                    $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                    $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]",
-                    $"Apple Distribution: {_iosBuildSettings.OrgName} ({_iosBuildSettings.OrgTeamId})");
+                    $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
 
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
-                    _iosBuildSettings.oneSignalProvisionalProfileUUID);
+                    iosBuildSettings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER",
-                    _iosBuildSettings.oneSignalProvisionalProfileUUID);
-                proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", _iosBuildSettings.OrgTeamId);
+                    iosBuildSettings.oneSignalProvisionalProfileName);
+                proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
             }
 
             // Add search paths
@@ -305,13 +319,122 @@ namespace LionStudios.Editor.AutoBuilder
 #endif
         }
 
+        #region ExportPlist Methods
+
+        public static void CreateExportPlist()
+        {
+            
+            
+            bool directoryExists = Directory.Exists(EXPORT_OPTIONS_PATH);
+
+            if (!directoryExists)
+            {
+                Directory.CreateDirectory(EXPORT_OPTIONS_PATH);
+            }
+
+            bool fileExists = File.Exists(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+            var document = new PlistDocument();
+            if (fileExists)
+            {
+                document.ReadFromFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+            }
+            else
+            {
+                document = new PlistDocument();
+                document.Create();
+                document.WriteToFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+            }
+
+            var rootDict = document.root;
+            rootDict.SetString("teamID", iosBuildSettings.OrgTeamId);
+            rootDict.SetString("method", "app-store");
+            rootDict.SetBoolean("uploadSymbols", true);
+            rootDict.CreateDict("provisioningProfiles");
+
+            var provisionalDictionary = rootDict.values["provisioningProfiles"].AsDict();
+
+            #region ProvisionalProfile Logic
+            CreateProvisioningProfilesFolder();
+            
+            string OrgString = iosBuildSettings.OrgTeamId + ".";
+            string UUIDKey_MobileProvisional = "UUID";
+            string IdentifierKey_MobileProvisional = "application-identifier";
+            string UUID = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, UUIDKey_MobileProvisional);
+            string ApplicationIdentifier = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, IdentifierKey_MobileProvisional);
+            ApplicationIdentifier = ApplicationIdentifier.Replace(OrgString, "");
+            provisionalDictionary.SetString(ApplicationIdentifier, UUID);
+            if (iosBuildSettings.usingOneSignal)
+            {
+                if (!string.IsNullOrEmpty(iosBuildSettings.oneSignalProvisionalProfileName))
+                {
+                    string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
+                    string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
+                    if (ApplicationIdentifierOneSignal.Contains(OrgString))
+                    {
+                        ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
+                        iosBuildSettings.oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
+                    }
+                    provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
+                }
+            }
+            #endregion
+
+            document.WriteToFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+        }
+
+        private static string GetValueFromProvisionalProfile(string ProvisionalProfileName, string KeyString)
+        {
+            string UUIDValue = "";
+            bool fileExists = File.Exists(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
+            if (fileExists)
+            {
+                string[] data = File.ReadAllLines(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
+                string UUIDLineValue = "";
+                for (int i = 0; i < data.Length; i++)
+                {
+                    if (data[i].Contains(KeyString))
+                    {
+                        UUIDLineValue = data[i + 1];
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(UUIDLineValue))
+                {
+                    string regularExpressionPattern1 = @"<string>(.*?)<\/string>";
+                    Regex regex = new Regex(regularExpressionPattern1, RegexOptions.Singleline);
+                    MatchCollection collection = regex.Matches(UUIDLineValue);
+                    Match m = collection[0];
+                    UUIDValue = m.Groups[1].Value;
+                }
+            }
+            else
+            {
+                Debug.LogError($"Put ProvisionalProfile Named {iosBuildSettings.ProvisioningProfileName} in {Application.dataPath + "/" + PROVISIONING_PROFILE_PATH}");
+            }
+
+            return UUIDValue;
+        }
+
+        public static void CreateProvisioningProfilesFolder()
+        {
+            bool directoryExists = Directory.Exists(PROVISIONING_PROFILE_PATH);
+            if (directoryExists)
+            {
+                Debug.Log("Directory Exists Provisioning");
+            }
+
+            Directory.CreateDirectory(PROVISIONING_PROFILE_PATH);
+        }
+
+        #endregion
+
         #region Ios Support Methods
 
         public static HashSet<string> GetSKAdNetworkIds()
         {
             HashSet<string> skAdNetworkIdsHashSet = new HashSet<string>();
 
-            string[] skAdNetworkIdsArr = File.ReadAllLines("Assets/Editor/SKAdNetworkIds.txt");
+            string[] skAdNetworkIdsArr = File.ReadAllLines($"{SETTINGS_PATH}/SKAdNetworkIds.txt");
             Regex skAdNetworkRegex = new Regex(@"^(.*skadnetwork).*$", RegexOptions.Multiline);
 
             foreach (var skAdNetworkId in skAdNetworkIdsArr)
@@ -324,7 +447,7 @@ namespace LionStudios.Editor.AutoBuilder
                 }
                 else
                 {
-                    Debug.Log(string.Format("Couldn't find a SKAdNetworkId in: {0}", skAdNetworkId));
+                    Debug.Log($"Couldn't find a SKAdNetworkId in: {skAdNetworkId}");
                 }
             }
 

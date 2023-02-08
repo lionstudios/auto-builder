@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetName: Unity-iPhone
   _organization: 0
-  ProvisioningProfileUUID: 
-  usingOneSignal: 0
-  oneSignalProductIdentifier: <yourbundleid>.OneSignalNotificationServiceExtension
-  oneSignalProvisionalProfileUUID: 
-  inAppPurchase: 0
-  RemoteNotifications: 0
+  ProvisioningProfileName: Appstore_KingWing
+  usingOneSignal: 1
+  oneSignalProductIdentifier: 
+  oneSignalProvisionalProfileName: Appstore_KingWing_OneSignal
+  inAppPurchase: 1
+  RemoteNotifications: 1
