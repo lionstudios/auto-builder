@@ -91,6 +91,8 @@ namespace LionStudios.Editor.AutoBuilder
         [InitializeOnLoadMethod] 
         private static void SetupProject()
         {
+            Directory.CreateDirectory(SETTINGS_PATH);
+            
             if (AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH) == null)
             {
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<IOSBuildSettings>(), IOS_SETTINGS_PATH);

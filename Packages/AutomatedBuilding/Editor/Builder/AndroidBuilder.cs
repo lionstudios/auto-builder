@@ -103,6 +103,8 @@ namespace LionStudios.Editor.AutoBuilder
         [InitializeOnLoadMethod]
         private static void SetupProject()
         {
+            Directory.CreateDirectory(SETTINGS_PATH);
+            
             if (AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH) == null)
             {
                 AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
