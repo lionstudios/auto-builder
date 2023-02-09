@@ -35,3 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.9]
 - Removed redundant properties
 - Changed settings assets auto creation logic
+
+## [0.0.10]
+- create parent settings directory fix
