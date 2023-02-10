@@ -40,6 +40,8 @@ namespace LionStudios.Editor.AutoBuilder
         private const string PROVISIONING_PROFILE_PATH = "ProvisioningProfiles/";
 
         public IOSBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider) { }
+        
+        private static string oneSignalProductIdentifier;
 
         ~IOSBuilder()
         {
@@ -196,7 +198,7 @@ namespace LionStudios.Editor.AutoBuilder
                 // Set Manual Provisioning Profiles One Signal Notification Service Extension
                 string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
                 proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
-            proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", iosBuildSettings.oneSignalProductIdentifier);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", oneSignalProductIdentifier);
                 proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
             proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
             proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
@@ -359,7 +361,7 @@ namespace LionStudios.Editor.AutoBuilder
                     if (ApplicationIdentifierOneSignal.Contains(OrgString))
                     {
                         ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
-                        iosBuildSettings.oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
+                        oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
                     }
                     provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
                 }
