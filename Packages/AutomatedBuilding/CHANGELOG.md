@@ -31,3 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - External FakeCMDArgsProvider settings
 - Remove jdkPath argument
 - Remove Create menus for settings
+ 
+## [0.0.11]
+- Automatically create export.plist during build
+- Remove oneSignalProductIdentifier setting, it's found automatically
+- Move build menu items to LionStudios menu
