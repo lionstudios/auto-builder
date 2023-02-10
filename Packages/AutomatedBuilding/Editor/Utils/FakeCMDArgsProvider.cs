@@ -12,8 +12,8 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         public Environment environment;
-        public string versionNumber = "2.2.4";
-        public string buildNumber = "159";
+        public string versionNumber = "0.0.0";
+        public string buildNumber = "1";
 
         string[] ICMDArgsProvider.Args
         {
@@ -21,7 +21,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 return new[]
                 {
-                    "-blah",
+                    "-fake",
                     "_batchmode",
                     $"-Args:environment={environment};versionNumber={versionNumber};buildNumber={buildNumber};buildName={versionNumber}({buildNumber});reimportAssets=true;"
                 };
