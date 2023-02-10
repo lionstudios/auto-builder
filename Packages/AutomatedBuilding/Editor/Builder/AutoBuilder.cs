@@ -17,7 +17,7 @@ public static class AutoBuilder
         _builder.Build();
     }
 
-    [MenuItem("Build/Android")]
+    [MenuItem("LionStudios/Build/Android")]
     public static void BuildAndroidTest()
     {
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
@@ -26,7 +26,7 @@ public static class AutoBuilder
         _builder.Build();
     }
 
-    [MenuItem("Build/iOS")]
+    [MenuItem("LionStudios/Build/iOS")]
     public static void BuildIOSTest()
     {
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
