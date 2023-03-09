@@ -42,6 +42,10 @@ namespace LionStudios.Editor.AutoBuilder
 
         protected override BuildPlayerOptions InitializeSpecific(IDictionary<string, string> cmdParamsMap, bool isProduction)
         {
+#if UNITY_IOS
+            CreateExportPlist();
+#endif
+            
             if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.iOS)
             {
                 EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.iOS, BuildTarget.iOS);

@@ -29,7 +29,6 @@ namespace LionStudios.Editor.AutoBuilder
 
         [Header("One Signal Provisional Data")]
         public bool usingOneSignal;
-        public string oneSignalProductIdentifier = "<yourbundleid>.OneSignalNotificationServiceExtension";
         public string oneSignalProvisionalProfileName;
 
         [Header("Capabilities")] 
