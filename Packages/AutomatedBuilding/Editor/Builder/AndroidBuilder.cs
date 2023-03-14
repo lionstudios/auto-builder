@@ -58,6 +58,7 @@ namespace LionStudios.Editor.AutoBuilder
             EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
             PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
             EditorUserBuildSettings.buildAppBundle = isProduction;
+            EditorUserBuildSettings.androidCreateSymbolsZip = true;
             PlayerSettings.Android.useCustomKeystore = isProduction;
             SetSigningKeys();
 
