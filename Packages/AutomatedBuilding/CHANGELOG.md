@@ -36,3 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatically create export.plist during build
 - Remove oneSignalProductIdentifier setting, it's found automatically
 - Move build menu items to LionStudios menu
+
+## [0.0.13]
+- Create Symbols.zip with Android builds
