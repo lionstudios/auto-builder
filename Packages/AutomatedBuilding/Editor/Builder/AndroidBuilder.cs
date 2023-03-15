@@ -29,7 +29,8 @@ namespace LionStudios.Editor.AutoBuilder
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.Android;
 
-        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider) { }
+        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider, IBuilder projectSpecificBuilder) 
+            : base(cmdArgsProvider, projectSpecificBuilder) { }
 
         ~AndroidBuilder()
         {

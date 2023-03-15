@@ -10,8 +10,10 @@ using UnityEngine;
 namespace LionStudios.Editor.AutoBuilder
 {
 
-    public abstract class Builder
+    public abstract class Builder : IBuilder
     {
+        private IBuilder _projectSpecificBuilder;
+            
         protected const string SETTINGS_PATH = "Assets/LionStudios/AutomatedBuilding/Editor";
         protected const string DATE_FORMAT = "yy-MM-dd-HH-mm";
         
@@ -40,8 +42,9 @@ namespace LionStudios.Editor.AutoBuilder
 
         protected abstract void CreateBuildDirectory(string path);
 
-        protected Builder(ICMDArgsProvider cmdArgsProvider)
+        protected Builder(ICMDArgsProvider cmdArgsProvider, IBuilder projectSpecificBuilder)
         {
+            _projectSpecificBuilder = projectSpecificBuilder;
             _cmdArgsProvider = cmdArgsProvider;
             _isTestEditorBuild = cmdArgsProvider is FakeCMDArgsProvider;
         }
@@ -51,11 +54,13 @@ namespace LionStudios.Editor.AutoBuilder
             _commonBuildSettings = null;
         }
 
-        public void Build()
+        void IBuilder.Build()
         {
             try
             {
                 AssetDatabase.StartAssetEditing();
+                
+                _projectSpecificBuilder.Build();
                 
                 var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols, 
                     ScriptingImplementation, out var isProduction);

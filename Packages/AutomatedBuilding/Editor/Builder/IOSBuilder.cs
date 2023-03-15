@@ -39,7 +39,8 @@ namespace LionStudios.Editor.AutoBuilder
         private const string EXPORT_OPTIONS_PATH = "buildTools/";
         private const string PROVISIONING_PROFILE_PATH = "ProvisioningProfiles/";
 
-        public IOSBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider) { }
+        public IOSBuilder(ICMDArgsProvider cmdArgsProvider, IBuilder projectSpecificBuilder) : 
+            base(cmdArgsProvider, projectSpecificBuilder) { }
         
         private static string oneSignalProductIdentifier;
 

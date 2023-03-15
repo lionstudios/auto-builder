@@ -3,17 +3,17 @@ using UnityEditor;
 
 public static class AutoBuilder
 {
-    private static Builder _builder;
+    private static IBuilder _builder;
 
-    public static void BuildAndroid()
+    public static void BuildAndroid(IBuilder projectSpecificBuilder)
     {
-        _builder = new AndroidBuilder(new RealCMDArgsProvider());
+        _builder = new AndroidBuilder(new RealCMDArgsProvider(), projectSpecificBuilder);
         _builder.Build();
     }
 
-    public static void BuildIOS()
+    public static void BuildIOS(IBuilder projectSpecificBuilder)
     {
-        _builder = new IOSBuilder(new RealCMDArgsProvider());
+        _builder = new IOSBuilder(new RealCMDArgsProvider(), projectSpecificBuilder);
         _builder.Build();
     }
 
@@ -22,7 +22,7 @@ public static class AutoBuilder
     {
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
 
-        _builder = new AndroidBuilder(fakeCMDArgsProvider);
+        _builder = new AndroidBuilder(fakeCMDArgsProvider, new ProjectSpecificBuilderStub());
         _builder.Build();
     }
 
@@ -30,7 +30,7 @@ public static class AutoBuilder
     public static void BuildIOSTest()
     {
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
-        _builder = new IOSBuilder(fakeCMDArgsProvider);
+        _builder = new IOSBuilder(fakeCMDArgsProvider, new ProjectSpecificBuilderStub());
         _builder.Build();
     }
 }
