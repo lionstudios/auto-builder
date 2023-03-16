@@ -39,3 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.13]
 - Create Symbols.zip with Android builds
+
+## [0.0.14]
+- Add OnBuildTriggered pre-build callback
