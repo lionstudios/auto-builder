@@ -6,15 +6,14 @@ using UnityEngine;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-    
     public class AndroidBuilder : Builder
     {
-
         protected const string ANDROID_BUILD_LOCATION = "builds/android";
 
         protected static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
 
         private static AndroidBuildSettings _androidBuildSettings;
+
         protected static AndroidBuildSettings AndroidBuildSettings
         {
             get
@@ -29,7 +28,9 @@ namespace LionStudios.Editor.AutoBuilder
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.Android;
 
-        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider) { }
+        public AndroidBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider)
+        {
+        }
 
         ~AndroidBuilder()
         {
@@ -58,7 +59,12 @@ namespace LionStudios.Editor.AutoBuilder
             EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
             PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
             EditorUserBuildSettings.buildAppBundle = isProduction;
+#if UNITY_2019_4
+            EditorUserBuildSettings.androidCreateSymbolsZip = true;
+
+#elif UNITY_2020_1_OR_NEWER
             EditorUserBuildSettings.androidCreateSymbols = AndroidCreateSymbols.Public;
+#endif
             PlayerSettings.Android.useCustomKeystore = isProduction;
             SetSigningKeys();
 
@@ -93,10 +99,12 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 return buildName;
             }
+
             if (cmdParamsMap.TryGetValue("buildNumber", out var buildNumber))
             {
                 return $"{Application.productName}-{DateTime.Now.ToString(DATE_FORMAT)}-{buildNumber}";
             }
+
             return $"{Application.productName}-{DateTime.Now.ToString(DATE_FORMAT)}";
         }
 
@@ -114,10 +122,8 @@ namespace LionStudios.Editor.AutoBuilder
             if (AssetDatabase.LoadAllAssetsAtPath(ANDROID_SETTINGS_PATH).Length == 0)
             {
                 Directory.CreateDirectory(SETTINGS_PATH);
-            AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
+                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
             }
         }
-
     }
-
 }

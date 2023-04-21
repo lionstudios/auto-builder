@@ -21,7 +21,7 @@ public static class AutoBuilder
         _builder = new IOSBuilder(new RealCMDArgsProvider());
         _builder.Build();
     }
-
+    
     [MenuItem("LionStudios/Build/Android")]
     public static void BuildAndroidTest()
     {
