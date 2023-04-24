@@ -138,101 +138,10 @@ namespace LionStudios.Editor.AutoBuilder
             #region Capability Manager Operations
 
             var capabilityManager = new ProjectCapabilityManager(pbxPath, entitlementFileRelativePath, targetName);
-            if (iosBuildSettings.AllCapabilities.addRemoteNotification)
-            {
-                capabilityManager.AddPushNotifications(true);
-                capabilityManager.AddBackgroundModes(BackgroundModesOptions.RemoteNotifications);
-            }
 
-            if (iosBuildSettings.AllCapabilities.addAppGroup)
+            foreach (ICapability capability in iosBuildSettings.Capabilities.AllCapabilities)
             {
-                capabilityManager.AddAppGroups(iosBuildSettings.AllCapabilities.appGroupSettings.appGroupIdentifiers);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addInAppPurchase)
-            {
-                capabilityManager.AddInAppPurchase();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addiCloud)
-            {
-                iCloudSettings settings = iosBuildSettings.AllCapabilities.iCloudSettings;
-                capabilityManager.AddiCloud(settings.enableKeyValueStorage, settings.enableICloudDocument, settings.enableCloudKit, settings.addDefaultContainers, settings.customContainers);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addMaps)
-            {
-                capabilityManager.AddMaps(iosBuildSettings.AllCapabilities.mapSettings.mapOptions);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addSiri)
-            {
-                capabilityManager.AddSiri();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addWallet)
-            {
-                capabilityManager.AddWallet(iosBuildSettings.AllCapabilities.walletSettings.passSubsets);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addApplePay)
-            {
-                capabilityManager.AddApplePay(iosBuildSettings.AllCapabilities.applePaySettings.merchants);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addDataProtection)
-            {
-                capabilityManager.AddDataProtection();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addGameCenter)
-            {
-                capabilityManager.AddGameCenter();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addHealthKit)
-            {
-                capabilityManager.AddHealthKit();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addHomeKit)
-            {
-                capabilityManager.AddHomeKit();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addWirelessAccessoryConfig)
-            {
-                capabilityManager.AddWirelessAccessoryConfiguration();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addAccessWifiInfo)
-            {
-                capabilityManager.AddAccessWiFiInformation();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addPersonalVPN)
-            {
-                capabilityManager.AddPersonalVPN();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addInterAppAudio)
-            {
-                capabilityManager.AddInterAppAudio();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addSignInWithApple)
-            {
-                capabilityManager.AddSignInWithApple();
-            }
-
-            if (iosBuildSettings.AllCapabilities.addAssociatedDomains)
-            {
-                capabilityManager.AddAssociatedDomains(iosBuildSettings.AllCapabilities.associatedDomainSettings.domains);
-            }
-
-            if (iosBuildSettings.AllCapabilities.addKeychainSharing)
-            {
-                capabilityManager.AddKeychainSharing(iosBuildSettings.AllCapabilities.keychainSharingSettings.accessGroups);
+                capability.AddCapabilityIfEnabled(capabilityManager);
             }
 
             capabilityManager.WriteToFile();
@@ -282,7 +191,7 @@ namespace LionStudios.Editor.AutoBuilder
             proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
 
            
-            if (iosBuildSettings.AllCapabilities.remoteNotificationSettings.usingOneSignal)
+            if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
             {
                 // Set Manual Provisioning Profiles One Signal Notification Service Extension
                 string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
@@ -292,8 +201,8 @@ namespace LionStudios.Editor.AutoBuilder
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
             
-                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.AllCapabilities.remoteNotificationSettings.oneSignalProvisionalProfileName);
-                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.AllCapabilities.remoteNotificationSettings.oneSignalProvisionalProfileName);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
+                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
             
                 capabilityManager.AddAppGroups(new string[] { "group." + Application.identifier + "onesignal" });
@@ -443,12 +352,12 @@ namespace LionStudios.Editor.AutoBuilder
             string ApplicationIdentifier = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, IdentifierKey_MobileProvisional);
             ApplicationIdentifier = ApplicationIdentifier.Replace(OrgString, "");
             provisionalDictionary.SetString(ApplicationIdentifier, UUID);
-            if (iosBuildSettings.AllCapabilities.remoteNotificationSettings.usingOneSignal)
+            if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
             {
-                if (!string.IsNullOrEmpty(iosBuildSettings.AllCapabilities.remoteNotificationSettings.oneSignalProvisionalProfileName))
+                if (!string.IsNullOrEmpty(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName))
                 {
-                    string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.AllCapabilities.remoteNotificationSettings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
-                    string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.AllCapabilities.remoteNotificationSettings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
+                    string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
+                    string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
                     if (ApplicationIdentifierOneSignal.Contains(OrgString))
                     {
                         ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
