@@ -15,8 +15,45 @@ MonoBehaviour:
   TargetName: Unity-iPhone
   _organization: 0
   ProvisioningProfileName: 
-  usingOneSignal: 0
-  oneSignalProvisionalProfileName: 
-  inAppPurchase: 0
-  RemoteNotifications: 0
-  SKAdNetworkIds: []
+  AllCapabilities:
+    addInAppPurchase: 0
+    addDataProtection: 0
+    addGameCenter: 0
+    addHealthKit: 0
+    addHomeKit: 0
+    addWirelessAccessoryConfig: 0
+    addAccessWifiInfo: 0
+    addPersonalVPN: 0
+    addInterAppAudio: 0
+    addSignInWithApple: 0
+    addSiri: 0
+    addRemoteNotification: 0
+    remoteNotificationSettings:
+      usingOneSignal: 0
+      oneSignalProvisionalProfileName: 
+    addAppGroup: 0
+    appGroupSettings:
+      appGroupIdentifiers: []
+    addiCloud: 0
+    iCloudSettings:
+      enableKeyValueStorage: 0
+      enableICloudDocument: 0
+      enableCloudKit: 1
+      addDefaultContainers: 1
+      customContainers: []
+    addMaps: 0
+    mapSettings:
+      mapOptions: 0
+    addWallet: 0
+    walletSettings:
+      passSubsets: []
+    addApplePay: 0
+    applePaySettings:
+      merchants: []
+    addAssociatedDomains: 0
+    associatedDomainSettings:
+      domains: []
+    addKeychainSharing: 0
+    keychainSharingSettings:
+      accessGroups: []
+  skAdIds: []
