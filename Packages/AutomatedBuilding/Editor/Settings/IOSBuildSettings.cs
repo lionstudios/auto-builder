@@ -43,36 +43,98 @@ namespace LionStudios.Editor.AutoBuilder
     {
         public string[] accessGroups;
     }
+    
+    [System.Serializable]
+    public class RemoteNotificationSettings
+    {
+        [Header("One Signal Provisional Data")]
+        public bool usingOneSignal;
+        public string oneSignalProvisionalProfileName;
+    }
+    
+    [System.Serializable]
+    public class AppGroupSettings
+    {
+        public string[] appGroupIdentifiers;
+    }
 
     [System.Serializable]
     public class CapabilitySettings
     {
+        [Header("In-App")]
         public bool addInAppPurchase;
-        public bool addRemoteNotification;
+        
+        [Header("Data Protection")]
+        [Space(5)]
         public bool addDataProtection;
+        
+        [Header("Game Center")]
+        [Space(5)]
         public bool addGameCenter;
+        
+        [Header("HealthKit")]
+        [Space(5)]
         public bool addHealthKit;
+        
+        [Header("HomeKit")]
+        [Space(5)]
         public bool addHomeKit;
+        
+        [Header("WirelessConfig")]
+        [Space(5)]
         public bool addWirelessAccessoryConfig;
+        
+        [Header("WirelessInfo")]
+        [Space(5)]
         public bool addAccessWifiInfo;
+        
+        [Header("PersonalVPN")]
+        [Space(5)]
         public bool addPersonalVPN;
+        
+        [Header("InterAppAudio")]
+        [Space(5)]
         public bool addInterAppAudio;
+        
+        [Header("SignInApple")]
+        [Space(5)]
         public bool addSignInWithApple;
-
+        
+        [Header("Siri")]
+        [Space(5)]
         public bool addSiri;
+        
+        [Header("Remote Notification")]
+        [Space(20)] public bool addRemoteNotification;
+        public RemoteNotificationSettings remoteNotificationSettings;
+
+        [Header("App Group")]
+        [Space(20)] public bool addAppGroup;
+        public AppGroupSettings appGroupSettings;
+        
+        [Header("iCloud")]
         [Space(20)] public bool addiCloud;
         public iCloudSettings iCloudSettings;
+        
+        [Header("Maps")]
         [Space(20)] public bool addMaps;
         public mapSettings mapSettings;
 
+        [Header("Wallet")]
         [Space(20)] public bool addWallet;
         public walletSettings walletSettings;
 
+        
+        [Header("Apple Pay")]
         [Space(20)] public bool addApplePay;
         public ApplePaySettings applePaySettings;
+        
+        
+        [Header("Associated Domains")]
         [Space(20)] public bool addAssociatedDomains;
         public AssociatedDomainSettings associatedDomainSettings;
 
+        [Header("Keychain Share")]
         [Space(20)] public bool addKeychainSharing;
         public KeychainSharingSettings keychainSharingSettings;
     }
@@ -104,14 +166,9 @@ namespace LionStudios.Editor.AutoBuilder
         [SerializeField] Organization _organization;
         public string ProvisioningProfileName = "";
 
-        [Header("One Signal Provisional Data")]
-        public bool usingOneSignal;
-
-        public string oneSignalProvisionalProfileName;
-
         [Header("Capabilities")] public CapabilitySettings AllCapabilities;
 
-        [Space(20)] [Header("SK Ad Network IDs")]
+        [Header("SK Ad Network IDs")]
         public List<string> skAdIds = new List<string>();
 
 
