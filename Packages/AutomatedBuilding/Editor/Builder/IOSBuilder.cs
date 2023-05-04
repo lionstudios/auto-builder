@@ -204,9 +204,6 @@ namespace LionStudios.Editor.AutoBuilder
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
-            
-                capabilityManager.AddAppGroups(new string[] { "group." + Application.identifier + "onesignal" });
-                capabilityManager.WriteToFile();
             }
 
             // Add search paths
