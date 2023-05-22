@@ -59,7 +59,9 @@ namespace LionStudios.Editor.AutoBuilder
                 bool result = await LionMaxAdapterStabiliser.InitAdNetworkData();
                 if(!result && CommonBuildSettings.CsvFetchFailOptions == CsvFetchFailOptions.FailBuild)
                 {
-                    throw new Exception("Failed to fetch stable ad adapters, possible connection error/nCommonBuildSettings.CsvFetchFailOptions is set to CsvFetchFailOptions.FailBuild/nFailing the build.");
+                    string message = "Failed to fetch stable ad adapters, possible connection error/nCommonBuildSettings.CsvFetchFailOptions is set to CsvFetchFailOptions.FailBuild/nFailing the build.";
+                    Debug.LogError(message);
+                    throw new Exception(message);
                 }
                 if(result)
                 {
@@ -86,6 +88,7 @@ namespace LionStudios.Editor.AutoBuilder
                                 message += "/n" + s;
                             }
                             message += "Failing the build";
+                            Debug.LogError(message);
                             throw new Exception(message);
                         }
                     }

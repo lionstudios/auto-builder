@@ -82,10 +82,13 @@ public static class LionMaxAdapterStabiliser
     [InitializeOnLoadMethod]
     static async void OnLoad()
     {
-        bool initResult = await InitAdNetworkData();
-        if(initResult)
+        if(!Application.isBatchMode)
         {
-            DisplayDialogIfMismatchFound();
+            bool initResult = await InitAdNetworkData();
+            if (initResult)
+            {
+                DisplayDialogIfMismatchFound();
+            }
         }
     }
 
