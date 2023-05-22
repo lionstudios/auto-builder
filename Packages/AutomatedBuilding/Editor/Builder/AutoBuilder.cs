@@ -8,35 +8,35 @@ public static class AutoBuilder
 
     public static event Action<BuildTargetGroup> OnBuildTriggered;
 
-    public static void BuildAndroid()
+    public static async void BuildAndroid()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.Android);
         _builder = new AndroidBuilder(new RealCMDArgsProvider());
-        _builder.Build();
+        await _builder.Build();
     }
 
-    public static void BuildIOS()
+    public static async void BuildIOS()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.iOS);
         _builder = new IOSBuilder(new RealCMDArgsProvider());
-        _builder.Build();
+        await _builder.Build();
     }
     
     [MenuItem("LionStudios/Build/Android")]
-    public static void BuildAndroidTest()
+    public static async void BuildAndroidTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.Android);
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
         _builder = new AndroidBuilder(fakeCMDArgsProvider);
-        _builder.Build();
+        await _builder.Build();
     }
 
     [MenuItem("LionStudios/Build/iOS")]
-    public static void BuildIOSTest()
+    public static async void BuildIOSTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.iOS);
         var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
         _builder = new IOSBuilder(fakeCMDArgsProvider);
-        _builder.Build();
+        await _builder.Build();
     }
 }
