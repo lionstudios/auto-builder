@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -51,8 +52,53 @@ namespace LionStudios.Editor.AutoBuilder
             _commonBuildSettings = null;
         }
 
-        public void Build()
+        async Task HandleAdAdapters()
         {
+            if (CommonBuildSettings.AdAdapterSettings != AdAdapterSettings.Ignore)
+            {
+                bool result = await LionMaxAdapterStabiliser.InitAdNetworkData();
+                if(!result && CommonBuildSettings.CsvFetchFailOptions == CsvFetchFailOptions.FailBuild)
+                {
+                    string message = "Failed to fetch stable ad adapters, possible connection error/nCommonBuildSettings.CsvFetchFailOptions is set to CsvFetchFailOptions.FailBuild/nFailing the build.";
+                    Debug.LogError(message);
+                    throw new Exception(message);
+                }
+                if(result)
+                {
+                    if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.AutoFixIfNotStableVersion)
+                    {
+                        LionMaxAdapterStabiliser.LoadInstalledNetworkVersions(true);
+                    }
+                    else if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.FailIfNotStableVersion)
+                    {
+                        List<string> mismatchedAdapterNames;
+                        if (BuildTargetGroup == BuildTargetGroup.iOS)
+                        {
+                            mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchIosAdapterNames();
+                        }
+                        else
+                        {
+                            mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchAndroidAdapterNames();
+                        }
+                        if (mismatchedAdapterNames.Count != 0)
+                        {
+                            string message = "Ad adapter version mismatch found, and CommonBuildSettings.AdAdapterSettings is set to AdAdapterSettings.FailIfNotStableVersion. Mismatched adapters: ";
+                            foreach (string s in mismatchedAdapterNames)
+                            {
+                                message += "/n" + s;
+                            }
+                            message += "Failing the build";
+                            Debug.LogError(message);
+                            throw new Exception(message);
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task Build()
+        {
+            await HandleAdAdapters();
             try
             {
                 AssetDatabase.StartAssetEditing();
