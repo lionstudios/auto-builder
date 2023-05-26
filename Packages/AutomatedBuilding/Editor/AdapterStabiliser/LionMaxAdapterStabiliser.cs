@@ -287,6 +287,11 @@ public static class LionMaxAdapterStabiliser
     {
         string mediationFolderPath = "/MaxSdk/Mediation";
         string mediationFolderFullPath = Application.dataPath + mediationFolderPath;
+        if(!Directory.Exists(mediationFolderFullPath))
+        {
+            Debug.LogError("Max sdk not found");
+            return;
+        }
 
         DirectoryInfo projectDir = new DirectoryInfo(Application.dataPath).Parent;
         string[] directoryPaths = Directory.GetDirectories(mediationFolderFullPath, "*", SearchOption.TopDirectoryOnly);
