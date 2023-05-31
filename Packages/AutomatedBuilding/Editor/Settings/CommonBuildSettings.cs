@@ -4,14 +4,13 @@ namespace LionStudios.Editor.AutoBuilder
 {
     public enum AdAdapterSettings
     {
-        Ignore,
         FailIfNotStableVersion,
-        AutoFixIfNotStableVersion,
+        Ignore,
     }
     public enum CsvFetchFailOptions
     {
-        Continue,
         FailBuild,
+        Continue,
     }
     public class CommonBuildSettings : ScriptableObject
     {
