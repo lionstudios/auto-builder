@@ -65,11 +65,7 @@ namespace LionStudios.Editor.AutoBuilder
                 }
                 if(result)
                 {
-                    if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.AutoFixIfNotStableVersion)
-                    {
-                        LionMaxAdapterStabiliser.LoadInstalledNetworkVersions(true);
-                    }
-                    else if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.FailIfNotStableVersion)
+                    if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.FailIfNotStableVersion)
                     {
                         List<string> mismatchedAdapterNames;
                         if (BuildTargetGroup == BuildTargetGroup.iOS)
