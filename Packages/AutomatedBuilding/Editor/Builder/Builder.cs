@@ -54,42 +54,37 @@ namespace LionStudios.Editor.AutoBuilder
 
         async Task HandleAdAdapters()
         {
-            if (CommonBuildSettings.AdAdapterSettings != AdAdapterSettings.Ignore)
+            bool result = await LionMaxAdapterStabiliser.InitAdNetworkData();
+            if(!result)
             {
-                bool result = await LionMaxAdapterStabiliser.InitAdNetworkData();
-                if(!result && CommonBuildSettings.CsvFetchFailOptions == CsvFetchFailOptions.FailBuild)
+                string message = "Failed to fetch stable ad adapters, possible connection error\nFailing the build.";
+                Debug.LogError(message);
+                EditorApplication.Exit(-1);
+            }
+            else
+            {
+                List<string> mismatchedAdapterNames;
+                if (BuildTargetGroup == BuildTargetGroup.iOS)
                 {
-                    string message = "Failed to fetch stable ad adapters, possible connection error/nCommonBuildSettings.CsvFetchFailOptions is set to CsvFetchFailOptions.FailBuild/nFailing the build.";
-                    Debug.LogError(message);
-                    throw new Exception(message);
+                    mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchIosAdapterNames();
                 }
-                if(result)
+                else
                 {
-                    if(CommonBuildSettings.AdAdapterSettings == AdAdapterSettings.FailIfNotStableVersion)
+                    mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchAndroidAdapterNames();
+                }
+                if (mismatchedAdapterNames.Count != 0)
+                {
+                    string message = "Ad adapter version mismatch found, and CommonBuildSettings.AdAdapterSettings is set to AdAdapterSettings.FailIfNotStableVersion. Mismatched adapters: ";
+                    foreach (string s in mismatchedAdapterNames)
                     {
-                        List<string> mismatchedAdapterNames;
-                        if (BuildTargetGroup == BuildTargetGroup.iOS)
-                        {
-                            mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchIosAdapterNames();
-                        }
-                        else
-                        {
-                            mismatchedAdapterNames = LionMaxAdapterStabiliser.GetMismatchAndroidAdapterNames();
-                        }
-                        if (mismatchedAdapterNames.Count != 0)
-                        {
-                            string message = "Ad adapter version mismatch found, and CommonBuildSettings.AdAdapterSettings is set to AdAdapterSettings.FailIfNotStableVersion. Mismatched adapters: ";
-                            foreach (string s in mismatchedAdapterNames)
-                            {
-                                message += "/n" + s;
-                            }
-                            message += "Failing the build";
-                            Debug.LogError(message);
-                            throw new Exception(message);
-                        }
+                        message += "\n" + s;
                     }
+                    message += "Failing the build";
+                    Debug.LogError(message);
+                    EditorApplication.Exit(-1);
                 }
             }
+            Debug.Log("Ad adapter check complete, ad adapters are stable.");
         }
 
         public async Task Build()
@@ -99,8 +94,13 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 AssetDatabase.StartAssetEditing();
                 
-                var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols, 
-                    ScriptingImplementation, out var isProduction);
+                var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols,
+                    ScriptingImplementation, out var isProduction, out var validateAdapters);
+
+                if(validateAdapters)
+                {
+                    await HandleAdAdapters();
+                }
 
                 var report = BuildPipeline.BuildPlayer(buildPlayerOptions);
                 
@@ -154,7 +154,7 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string[] devAdditionalDefSymbols, 
-            ScriptingImplementation scriptingImplementation, out bool isProduction)
+            ScriptingImplementation scriptingImplementation, out bool isProduction, out bool validateAdapters)
         {
             try
             {
@@ -166,11 +166,13 @@ namespace LionStudios.Editor.AutoBuilder
                     { "buildNumber", string.Empty },
                     { "buildName", string.Empty },
                     { "reimportAssets", string.Empty },
+                    { "validateAdapters", "true" },
                 };
 
                 SetCmdParamsMap(cmdArgs, cmdParamsMap);
 
-            isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
+                isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
+                validateAdapters = cmdParamsMap["validateAdapters"].Equals("true", StringComparison.InvariantCultureIgnoreCase);
 
                 CreateBuildDirectory(BuildLocation);
 

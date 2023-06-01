@@ -94,25 +94,33 @@ public static class LionMaxAdapterStabiliser
 
     public static async Task<bool> InitAdNetworkData()
     {
-        // Use this url for testing.
-        string testUrl = Application.dataPath;
-        testUrl = "file://" + testUrl.Replace("/Assets", "/Packages") + "/LionSuite-SDKService/Resources/TestStableAdapterList.csv";
-
-        // Real google docs url
-        string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
-
-        string csvText = await DownloadCSVFileAsync(url);
-        if (string.IsNullOrEmpty(csvText))
+        try
         {
+            // Use this url for testing.
+            string testUrl = Application.dataPath;
+            testUrl = "file://" + testUrl.Replace("/Assets", "/Packages") + "/LionSuite-SDKService/Resources/TestStableAdapterList.csv";
+
+            // Real google docs url
+            string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
+
+            string csvText = await DownloadCSVFileAsync(url);
+            if (string.IsNullOrEmpty(csvText))
+            {
+                return false;
+            }
+
+            AdNetworks = ParseCSV(csvText);
+            Debug.Log("Parsed ad network data: " + AdNetworks.Count + " entries found.");
+
+            LoadInstalledNetworkVersions(false);
+
+            return true;
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e.Message);
             return false;
         }
-
-        AdNetworks = ParseCSV(csvText);
-        Debug.Log("Parsed ad network data: " + AdNetworks.Count + " entries found.");
-
-        LoadInstalledNetworkVersions(false);
-
-        return true;
     }
 
     public static List<string> GetMismatchIosAdapterNames()
