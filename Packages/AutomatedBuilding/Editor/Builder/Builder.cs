@@ -89,7 +89,6 @@ namespace LionStudios.Editor.AutoBuilder
 
         public async Task Build()
         {
-            await HandleAdAdapters();
             try
             {
                 AssetDatabase.StartAssetEditing();
