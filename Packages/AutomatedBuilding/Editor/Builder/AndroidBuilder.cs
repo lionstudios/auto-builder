@@ -62,7 +62,7 @@ namespace LionStudios.Editor.AutoBuilder
 #if UNITY_2019_4
             EditorUserBuildSettings.androidCreateSymbolsZip = true;
 
-#elif UNITY_2020_1_OR_NEWER
+#elif UNITY_2021_1_OR_NEWER
             EditorUserBuildSettings.androidCreateSymbols = AndroidCreateSymbols.Public;
 #endif
             PlayerSettings.Android.useCustomKeystore = isProduction;
