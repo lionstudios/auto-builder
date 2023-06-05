@@ -1,6 +1,9 @@
 using System;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
+
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+#endif
 
 namespace LionStudios.Editor.AutoBuilder
 {
@@ -13,6 +16,7 @@ namespace LionStudios.Editor.AutoBuilder
 
         [SerializeField] public T settings = default;
 
+#if UNITY_IOS
         public void AddCapabilityIfEnabled(ProjectCapabilityManager capabilityManager)
         {
             if (enabled)
@@ -20,6 +24,7 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         public abstract void AddCapability(ProjectCapabilityManager capabilityManager);
+#endif
 
     }
 

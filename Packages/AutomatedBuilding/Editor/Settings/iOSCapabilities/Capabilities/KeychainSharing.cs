@@ -1,5 +1,8 @@
 using System;
+
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 
 namespace LionStudios.Editor.AutoBuilder
 {
@@ -14,10 +17,12 @@ namespace LionStudios.Editor.AutoBuilder
     public class KeychainSharingCapability : Capability<KeychainSharingSettings>
     {
 
+#if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {
             capabilityManager.AddKeychainSharing(settings.accessGroups);
         }
+#endif
 
     }
 

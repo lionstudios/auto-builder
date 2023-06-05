@@ -1,5 +1,8 @@
 using System;
+
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 
 namespace LionStudios.Editor.AutoBuilder
 {
@@ -17,10 +20,12 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class iCloudCapability : Capability<iCloudCapabilitySettings>
     {
+#if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {
             capabilityManager.AddiCloud(settings.enableKeyValueStorage, settings.enableICloudDocument, settings.enableCloudKit, settings.addDefaultContainers, settings.customContainers);
         }
+#endif
     }
 
 }
