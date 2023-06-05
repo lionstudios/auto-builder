@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.5]
-- Compile fix for unity 2020
+- Add support for Unity 2020
+- Add support for Unity install without iOS module
 
 ## [0.1.4]
 - Moved adapter stabiliser settings to command line arguments
