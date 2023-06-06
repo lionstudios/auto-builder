@@ -133,7 +133,7 @@ public class LionMaxAdapterServiceWindow : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Fix"))
+        if (GUILayout.Button("Update All"))
         {
             FixInstalledAdNetworkVersions();
         }
