@@ -227,32 +227,21 @@ public static class LionMaxAdapterStabiliser
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                string[] values = line.Split(',');
-                if(values.Length == 1)
-                {
-                    // Continuation from previous line, probably newline in comments cell. Ignore
-                    continue;
-                }
-
-                string networkName = values[0];
-                string networkCodeName = values[1];
-                string androidBuild = values[2];
-                string iosBuild = values[3]; 
-
-                // This line is an exception
-                if (values[4] == "Date Updated")
-                {
-                    continue;
-                }
                 try
                 {
-                    DateTime dateUpdated = DateTime.ParseExact(values[4], "M/d/yyyy", CultureInfo.InvariantCulture);
-                    string comments = values[5];
-
+                    string[] values = line.Split(',');
+                    string networkName = values[0];
+                    string networkCodeName = values[1];
+                    string androidBuild = values[2];
+                    string iosBuild = values[3];
+                    
+                    if (string.IsNullOrEmpty(networkCodeName))
+                        continue;
+                    
                     AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild);
                     adNetworks.Add(adNetwork);
                 }
-                catch(FormatException ex)
+                catch(Exception ex)
                 {
                     continue;
                 }
