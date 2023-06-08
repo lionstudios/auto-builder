@@ -96,10 +96,6 @@ public static class LionMaxAdapterStabiliser
     {
         try
         {
-            // Use this url for testing.
-            string testUrl = Application.dataPath;
-            testUrl = "file://" + testUrl.Replace("/Assets", "/Packages") + "/LionSuite-SDKService/Resources/TestStableAdapterList.csv";
-
             // Real google docs url
             string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
 
@@ -184,27 +180,6 @@ public static class LionMaxAdapterStabiliser
                 }
             }
         }
-    }
-
-    public static void WriteTestCsv()
-    {
-        List<string> allLines = new List<string>();
-        string filePath = Application.dataPath.Replace("/Assets", "/Packages") + "/LionSuite-SDKService/Resources/TestList.csv";
-
-        for (int i = 0; i < 5; i++)
-        {
-            allLines.Add("SomeData");
-        }
-
-        foreach(AdNetwork adNetwork in AdNetworks)
-        {
-            string line = adNetwork.NetworkName + "," + adNetwork.NetworkCodeName + "," + adNetwork.InstalledAndroidVersion + ".TEST" + "," + adNetwork.InstalledIosVersion + ".TEST" + "," + adNetwork.DateUpdated.ToShortDateString() + "," + adNetwork.Comments;
-            allLines.Add(line);
-        }
-
-
-        File.WriteAllLines(filePath, allLines);
-
     }
 
     static async Task<string> DownloadCSVFileAsync(string url)
