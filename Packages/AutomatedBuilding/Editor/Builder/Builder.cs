@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LionStudios.Editor.AutoBuilder.AdapterStabilizer;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
