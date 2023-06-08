@@ -38,18 +38,22 @@ public class AdNetwork
         InstalledAndroidVersion = android;
         InstalledIosVersion = ios;
     }
+    public bool IsMatchingLatestStableIOS()
+    {
+        return (string.IsNullOrEmpty(IOSBuild) ||
+                string.IsNullOrEmpty(InstalledIosVersion) ||
+                new Version(IOSBuild) <= new Version(InstalledIosVersion));
+    }
+    public bool IsMatchingLatestStableAndroid()
+    {
+        return (string.IsNullOrEmpty(AndroidBuild) ||
+                string.IsNullOrEmpty(InstalledAndroidVersion) ||
+                new Version(AndroidBuild) <= new Version(InstalledAndroidVersion));
+    }
 
     public bool IsMatchingLatestStable()
     {
-        if (!string.IsNullOrEmpty(AndroidBuild) &&
-            !string.IsNullOrEmpty(InstalledAndroidVersion) &&
-            AndroidBuild != InstalledAndroidVersion)
-            return false;
-        if (!string.IsNullOrEmpty(IOSBuild) &&
-            !string.IsNullOrEmpty(InstalledIosVersion) &&
-            IOSBuild != InstalledIosVersion) 
-            return false;
-        return true;
+        return IsMatchingLatestStableAndroid() && IsMatchingLatestStableIOS();
     }
 }
 
@@ -124,9 +128,7 @@ public static class LionMaxAdapterStabiliser
         List<string> result = new List<string>();
         foreach (AdNetwork adNetwork in AdNetworks)
         {
-            if(!string.IsNullOrEmpty(adNetwork.InstalledIosVersion) &&
-                !string.IsNullOrEmpty(adNetwork.IOSBuild) &&
-                adNetwork.InstalledIosVersion != adNetwork.IOSBuild)
+            if(!adNetwork.IsMatchingLatestStableIOS())
             {
                 result.Add(adNetwork.NetworkCodeName);
             }
@@ -139,9 +141,7 @@ public static class LionMaxAdapterStabiliser
         List<string> result = new List<string>();
         foreach (AdNetwork adNetwork in AdNetworks)
         {
-            if (!string.IsNullOrEmpty(adNetwork.InstalledIosVersion) &&
-                !string.IsNullOrEmpty(adNetwork.IOSBuild) &&
-                adNetwork.InstalledIosVersion != adNetwork.IOSBuild)
+            if(!adNetwork.IsMatchingLatestStableAndroid())
             {
                 result.Add(adNetwork.NetworkCodeName);
             }

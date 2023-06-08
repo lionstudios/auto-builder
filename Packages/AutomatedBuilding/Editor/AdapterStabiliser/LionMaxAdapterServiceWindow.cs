@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -96,6 +97,10 @@ public class LionMaxAdapterServiceWindow : EditorWindow
             {
                 GUI.color = Color.green;
             }
+            else if (new Version(network.InstalledAndroidVersion) >= new Version(network.AndroidBuild))
+            {
+                GUI.color = Color.yellow;
+            }
             else
             {
                 GUI.color = Color.red;
@@ -113,6 +118,10 @@ public class LionMaxAdapterServiceWindow : EditorWindow
             else if (network.InstalledIosVersion == network.IOSBuild)
             {
                 GUI.color = Color.green;
+            }
+            else if (new Version(network.InstalledIosVersion) >= new Version(network.IOSBuild))
+            {
+                GUI.color = Color.yellow;
             }
             else
             {
@@ -133,7 +142,7 @@ public class LionMaxAdapterServiceWindow : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Update All"))
+        if (GUILayout.Button("Update All Adapters to QA Stable Versions"))
         {
             FixInstalledAdNetworkVersions();
         }
