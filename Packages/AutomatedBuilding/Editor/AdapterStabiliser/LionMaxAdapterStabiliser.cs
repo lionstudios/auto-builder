@@ -165,14 +165,14 @@ public static class LionMaxAdapterStabiliser
             bool showDialog = !SessionState.GetBool("AdNetworkVersionsMismatchOptOut", false);
             if (showDialog)
             {
-                int result = EditorUtility.DisplayDialogComplex("Ad Network Versions Mismatch",
-                                                          "The adapters are not in the latest stable versions defined by Lion QA. Do you want to update the adapters?",
+                int result = EditorUtility.DisplayDialogComplex("Outdated Adapters",
+                                                          "Some adapters are out of date. Do you want to update the adapters?",
                                                           "Update",
-                                                          "Cancel",
-                                                          "Cancel - Do not ask again for this session");
+                                                          "Ignore",
+                                                          "Ignore - Do not ask again for this session");
                 if (result == 0)
                 {
-                    LoadInstalledNetworkVersions(true);
+                    LionMaxAdapterServiceWindow.ShowWindow();
                 }
                 else if(result == 2) 
                 {
@@ -346,11 +346,12 @@ public static class LionMaxAdapterStabiliser
         }
 
 
-        Debug.Log("Installed ad network versions:");
+        string recap = "Installed ad network versions:\n";
         foreach (AdNetwork adNetwork in AdNetworks)
         {
-            Debug.Log(adNetwork.NetworkName + " " + adNetwork.NetworkCodeName + " Android: " + adNetwork.InstalledAndroidVersion + " iOS: " + adNetwork.InstalledIosVersion);
+            recap += (adNetwork.NetworkName + " (" + adNetwork.NetworkCodeName + ")   ->   Android: " + (adNetwork.InstalledAndroidVersion ?? "none") + "    ;   iOS: " + (adNetwork.InstalledIosVersion ?? "none") + "\n");
         }
+        Debug.Log(recap);
     }
 
     private static string ProcessIosPodsNode(XmlNode iosPodsNode, string adNetworkName, bool fix)
