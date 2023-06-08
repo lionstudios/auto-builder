@@ -142,7 +142,7 @@ public class LionMaxAdapterServiceWindow : EditorWindow
 
         EditorGUILayout.Space();
 
-        if (GUILayout.Button("Update All Adapters to QA Stable Versions"))
+        if (GUILayout.Button("Update Adapters to QA Stable Versions"))
         {
             FixInstalledAdNetworkVersions();
         }

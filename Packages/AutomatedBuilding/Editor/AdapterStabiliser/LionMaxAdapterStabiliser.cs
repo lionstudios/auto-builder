@@ -315,36 +315,38 @@ public static class LionMaxAdapterStabiliser
             currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);
         }
 
+        // The Applovin part below was commented out because it can cause issues with mismatches between MAX version and Applovin adapter version
+        // If a solution to these issues is figured out, you can uncomment this code
+       
         //Applovin is handled separately
-        string applovinDependenciesFilePath = Application.dataPath + "/MaxSdk/AppLovin/Editor/Dependencies.xml";
-        if (File.Exists(applovinDependenciesFilePath))
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(applovinDependenciesFilePath);
-
-            string installedAndroidVersion = "";
-            string installedIosVersion = "";
-
-            XmlNode androidPackagesNode = doc.SelectSingleNode("//androidPackages");
-            installedAndroidVersion = ProcessAndroidPackagesNode(androidPackagesNode, "AppLovin", fix);
-
-            XmlNode iosPodsNode = doc.SelectSingleNode("//iosPods");
-            installedIosVersion = ProcessIosPodsNode(iosPodsNode, "AppLovin", fix);
-
-            if (fix)
-            {
-                doc.Save(applovinDependenciesFilePath);
-            }
-
-            AdNetwork currentNetwork = AdNetworks.Find(x => x.NetworkCodeName == "AppLovin");
-            if (currentNetwork == null)
-            {
-                currentNetwork = new AdNetwork("AppLovin", "AppLovin", "", "", DateTime.Now, "");
-                AdNetworks.Add(currentNetwork);
-            }
-            currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);
-        }
-
+        // string applovinDependenciesFilePath = Application.dataPath + "/MaxSdk/AppLovin/Editor/Dependencies.xml";
+        // if (File.Exists(applovinDependenciesFilePath))
+        // {
+        //     XmlDocument doc = new XmlDocument();
+        //     doc.Load(applovinDependenciesFilePath);
+        //
+        //     string installedAndroidVersion = "";
+        //     string installedIosVersion = "";
+        //
+        //     XmlNode androidPackagesNode = doc.SelectSingleNode("//androidPackages");
+        //     installedAndroidVersion = ProcessAndroidPackagesNode(androidPackagesNode, "AppLovin", fix);
+        //
+        //     XmlNode iosPodsNode = doc.SelectSingleNode("//iosPods");
+        //     installedIosVersion = ProcessIosPodsNode(iosPodsNode, "AppLovin", fix);
+        //
+        //     if (fix)
+        //     {
+        //         doc.Save(applovinDependenciesFilePath);
+        //     }
+        //
+        //     AdNetwork currentNetwork = AdNetworks.Find(x => x.NetworkCodeName == "AppLovin");
+        //     if (currentNetwork == null)
+        //     {
+        //         currentNetwork = new AdNetwork("AppLovin", "AppLovin", "", "", DateTime.Now, "");
+        //         AdNetworks.Add(currentNetwork);
+        //     }
+        //     currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);
+        // }
 
         string recap = "Installed ad network versions:\n";
         foreach (AdNetwork adNetwork in AdNetworks)
