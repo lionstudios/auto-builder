@@ -17,20 +17,16 @@ public class AdNetwork
     public string NetworkCodeName { get; private set; }
     public string AndroidBuild { get; private set; }
     public string IOSBuild { get; private set; }
-    public DateTime DateUpdated { get; private set; }
-    public string Comments { get; private set; }
 
     public string InstalledAndroidVersion { get; private set; }
     public string InstalledIosVersion { get; private set; }
 
-    public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild, DateTime dateUpdated, string comments)
+    public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild)
     {
         NetworkName = networkName;
         NetworkCodeName = networkCodeName;
         AndroidBuild = androidBuild;
         IOSBuild = iosBuild;
-        DateUpdated = dateUpdated; 
-        Comments = comments;
     }
 
     public void SetInstalledVersions(string android, string ios)
@@ -253,7 +249,7 @@ public static class LionMaxAdapterStabiliser
                     DateTime dateUpdated = DateTime.ParseExact(values[4], "M/d/yyyy", CultureInfo.InvariantCulture);
                     string comments = values[5];
 
-                    AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild, dateUpdated, comments);
+                    AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild);
                     adNetworks.Add(adNetwork);
                 }
                 catch(FormatException ex)
@@ -309,7 +305,7 @@ public static class LionMaxAdapterStabiliser
             AdNetwork currentNetwork = AdNetworks.Find(x => x.NetworkCodeName == adNetworkName);
             if(currentNetwork == null)
             {
-                currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "", DateTime.Now, "");
+                currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "");
                 AdNetworks.Add(currentNetwork);
             }
             currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);
