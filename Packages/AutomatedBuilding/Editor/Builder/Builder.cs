@@ -52,14 +52,26 @@ namespace LionStudios.Editor.AutoBuilder
             _commonBuildSettings = null;
         }
 
+        void FailBuild(string message)
+        {
+            if(Application.isBatchMode)
+            {
+                Debug.LogError("\n\n" + message + "\n\n");
+                EditorApplication.Exit(-1);
+            }
+            else
+            {
+                throw new ApplicationException(message);
+            }
+        }
+
         async Task HandleAdAdapters()
         {
             bool result = await LionMaxAdapterStabiliser.InitAdNetworkData();
             if(!result)
             {
                 string message = "Failed to fetch stable ad adapters, possible connection error\nFailing the build.";
-                Debug.LogError(message);
-                EditorApplication.Exit(-1);
+                FailBuild(message);
             }
             else
             {
@@ -74,14 +86,13 @@ namespace LionStudios.Editor.AutoBuilder
                 }
                 if (mismatchedAdapterNames.Count != 0)
                 {
-                    string message = "Ad adapter version mismatch found, and CommonBuildSettings.AdAdapterSettings is set to AdAdapterSettings.FailIfNotStableVersion. Mismatched adapters: ";
+                    string message = "Some adapters are out of date:";
                     foreach (string s in mismatchedAdapterNames)
                     {
-                        message += "\n" + s;
+                        message += "\n - " + s;
                     }
-                    message += "Failing the build";
-                    Debug.LogError(message);
-                    EditorApplication.Exit(-1);
+                    message += "\nFailing the build.";
+                    FailBuild(message);
                 }
             }
             Debug.Log("Ad adapter check complete, ad adapters are stable.");
