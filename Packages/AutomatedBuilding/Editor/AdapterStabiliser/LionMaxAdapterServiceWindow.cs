@@ -96,20 +96,18 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 GUI.color = GetInstalledVersionColor(network.InstalledAndroidVersion, network.AndroidBuild, network.AndroidBrokens);
 
                 GUILayout.Label($"{network.InstalledAndroidVersion}", GUILayout.Width(COLUMN_WIDTH));
-                
-                GUI.color = originalColor;
-                
                 GUILayout.Label($"{network.AndroidBuild}", GUILayout.Width(COLUMN_WIDTH));
                 GUILayout.Label($"{network.GetAndroidBrokensString()}", GUILayout.Width(COLUMN_WIDTH));
+                
+                GUI.color = originalColor;
 
                 GUI.color = GetInstalledVersionColor(network.InstalledIosVersion, network.IOSBuild, network.IOSBrokens);
 
                 GUILayout.Label($"{network.InstalledIosVersion}", GUILayout.Width(COLUMN_WIDTH));
-                
-                GUI.color = originalColor;
-                
                 GUILayout.Label($"{network.IOSBuild}", GUILayout.Width(COLUMN_WIDTH));
                 GUILayout.Label($"{network.GetIOSBrokensString()}", GUILayout.Width(COLUMN_WIDTH));
+                
+                GUI.color = originalColor;
 
 
                 EditorGUILayout.EndHorizontal();
@@ -132,7 +130,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
         }
 
-        private Color GetInstalledVersionColor(Version installed, Version lastStable, Version[] brokens)
+        private Color GetInstalledVersionColor(Version installed, Version lastStable, List<Version> brokens)
         {
             if (brokens != null && brokens.Contains(installed))
                 return Color.red;

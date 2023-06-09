@@ -15,7 +15,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         }
         
         public Version(string version)
-            : this(version.Split('.').Select(s => int.Parse(s)).ToArray()) { }
+            : this(version.Trim().Split(".").Select(s => int.Parse(s)).ToArray()) { }
 
         public int CompareTo(object obj)
         {
@@ -58,7 +58,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             return true;
         }
 
-        public override bool Equals(object obj) 
+        public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
                 return false;
