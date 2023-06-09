@@ -18,8 +18,8 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         public string NetworkCodeName { get; private set; }
         public Version AndroidBuild { get; private set; }
         public Version IOSBuild { get; private set; }
-        public Version[] AndroidBrokens { get; private set; }
-        public Version[] IOSBrokens { get; private set; }
+        public List<Version> AndroidBrokens { get; private set; }
+        public List<Version> IOSBrokens { get; private set; }
 
         public Version InstalledAndroidVersion { get; private set; }
         public Version InstalledIosVersion { get; private set; }
@@ -32,14 +32,24 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 AndroidBuild = new Version(androidBuild);
             if (!string.IsNullOrEmpty(iosBuild))
                 IOSBuild = new Version(iosBuild);
-            if (!string.IsNullOrEmpty(androidBrokens))
-                AndroidBrokens = androidBrokens.Split(new char[] { ';', '-' }).Select(s => new Version(s)).ToArray();
-            else
-                AndroidBrokens = new Version[]{};
-            if (!string.IsNullOrEmpty(iOSBrokens))
-                IOSBrokens = iOSBrokens.Split(new char[] { ';', '-' }).Select(s => new Version(s)).ToArray();
-            else
-                IOSBrokens = new Version[]{};
+            AndroidBrokens = StringToVersionList(androidBrokens);
+            IOSBrokens = StringToVersionList(iOSBrokens);
+        }
+
+        List<Version> StringToVersionList(string s)
+        {
+            List<Version> res = new List<Version>();
+            if (string.IsNullOrEmpty(s))
+                return res;
+            foreach (string item in s.Split(new char[] { ';', '-' }))
+            {
+                try
+                {
+                    res.Add(new Version(item));
+                }
+                catch { }
+            }
+            return res;
         }
 
         public void SetInstalledVersions(string android, string ios)
@@ -71,7 +81,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
         public override string ToString()
         {
-            return NetworkName + " (" + NetworkCodeName + ")   ->   Android: " + (InstalledAndroidVersion?.ToString() ?? "none") + "    ;   iOS: " + (InstalledIosVersion?.ToString() ?? "none") + "   ;   Recommended   ->   Android: " + (AndroidBuild?.ToString() ?? "none") + "    ;   iOS: " + (IOSBuild?.ToString() ?? "none");
+            return NetworkName + " (" + NetworkCodeName + ")   ->   Android: " + (InstalledAndroidVersion?.ToString() ?? "none") + "    ;   iOS: " + (InstalledIosVersion?.ToString() ?? "none") + "   ;   Recommended   ->   Android: " + (AndroidBuild?.ToString() ?? "none") + "    ;   iOS: " + (IOSBuild?.ToString() ?? "none")  + "   ;   Broken   ->   Android: " + GetAndroidBrokensString() + "    ;   iOS: " + GetIOSBrokensString();
         }
 
         public string GetAndroidBrokensString()

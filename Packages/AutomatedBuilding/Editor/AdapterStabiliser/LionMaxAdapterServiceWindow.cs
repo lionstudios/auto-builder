@@ -127,7 +127,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
         }
 
-        private Color GetInstalledVersionColor(Version installed, Version lastStable, Version[] brokens)
+        private Color GetInstalledVersionColor(Version installed, Version lastStable, List<Version> brokens)
         {
             if (brokens != null && brokens.Contains(installed))
                 return Color.red;
