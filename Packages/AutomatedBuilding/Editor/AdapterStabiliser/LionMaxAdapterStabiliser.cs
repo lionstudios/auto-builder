@@ -102,6 +102,9 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
     public static class LionMaxAdapterStabiliser
     {
+        
+        private const string ADAPTERS_LIST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
+        
         public class CertificateCheckBypasser : CertificateHandler
         {
             protected override bool ValidateCertificate(byte[] certificateData)
@@ -143,10 +146,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         {
             try
             {
-                // Real google docs url
-                string url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
-
-                string csvText = await DownloadCSVFileAsync(url);
+                string csvText = await DownloadCSVFileAsync(ADAPTERS_LIST_URL);
                 if (string.IsNullOrEmpty(csvText))
                 {
                     return false;
