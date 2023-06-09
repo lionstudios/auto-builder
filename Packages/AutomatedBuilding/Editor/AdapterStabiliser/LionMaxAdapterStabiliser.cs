@@ -105,13 +105,6 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         
         private const string ADAPTERS_LIST_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwPfavl63ZqYVo-ChQ81em5zRtJMeSyE5c-7QWcN4qdnu_zCiQGAebk7_a2n22p_1WT6A7ELAfW8-f/pub?gid=0&single=true&output=csv";
         
-        public class CertificateCheckBypasser : CertificateHandler
-        {
-            protected override bool ValidateCertificate(byte[] certificateData)
-            {
-                return true;
-            }
-        }
         public static List<AdNetwork> AdNetworks;
 
         public static List<AdNetwork> GetNonMatchingNetworks()
@@ -233,7 +226,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                www.certificateHandler = new CertificateCheckBypasser();
+                
                 www.SetRequestHeader("Content-Type", "text/plain");
 
                 var operation = www.SendWebRequest();
