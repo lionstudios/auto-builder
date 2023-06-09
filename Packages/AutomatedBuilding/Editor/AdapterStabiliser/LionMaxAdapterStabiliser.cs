@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
@@ -17,11 +18,13 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         public string NetworkCodeName { get; private set; }
         public Version AndroidBuild { get; private set; }
         public Version IOSBuild { get; private set; }
+        public Version[] AndroidBrokens { get; private set; }
+        public Version[] IOSBrokens { get; private set; }
 
         public Version InstalledAndroidVersion { get; private set; }
         public Version InstalledIosVersion { get; private set; }
 
-        public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild)
+        public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild, string androidBrokens, string iOSBrokens)
         {
             NetworkName = networkName;
             NetworkCodeName = networkCodeName;
@@ -29,6 +32,14 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 AndroidBuild = new Version(androidBuild);
             if (!string.IsNullOrEmpty(iosBuild))
                 IOSBuild = new Version(iosBuild);
+            if (!string.IsNullOrEmpty(androidBrokens))
+                AndroidBrokens = androidBrokens.Split(new char[] { ';', '-' }).Select(s => new Version(s)).ToArray();
+            else
+                AndroidBrokens = new Version[]{};
+            if (!string.IsNullOrEmpty(iOSBrokens))
+                IOSBrokens = iOSBrokens.Split(new char[] { ';', '-' }).Select(s => new Version(s)).ToArray();
+            else
+                IOSBrokens = new Version[]{};
         }
 
         public void SetInstalledVersions(string android, string ios)
@@ -43,14 +54,14 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         {
             return (IOSBuild == null ||
                     InstalledIosVersion == null ||
-                    IOSBuild <= InstalledIosVersion);
+                    IOSBuild <= InstalledIosVersion && !IOSBrokens.Contains(InstalledIosVersion));
         }
 
         public bool IsMatchingLatestStableAndroid()
         {
             return (AndroidBuild == null ||
                     InstalledAndroidVersion == null ||
-                    AndroidBuild <= InstalledAndroidVersion);
+                    AndroidBuild <= InstalledAndroidVersion && !AndroidBrokens.Contains(InstalledAndroidVersion));
         }
 
         public bool IsMatchingLatestStable()
@@ -62,6 +73,21 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         {
             return NetworkName + " (" + NetworkCodeName + ")   ->   Android: " + (InstalledAndroidVersion?.ToString() ?? "none") + "    ;   iOS: " + (InstalledIosVersion?.ToString() ?? "none") + "   ;   Recommended   ->   Android: " + (AndroidBuild?.ToString() ?? "none") + "    ;   iOS: " + (IOSBuild?.ToString() ?? "none");
         }
+
+        public string GetAndroidBrokensString()
+        {
+            if (AndroidBrokens == null)
+                return string.Empty;
+            return string.Join(" ; ", AndroidBrokens.Select(v => v.ToString()));
+        }
+        
+        public string GetIOSBrokensString()
+        {
+            if (IOSBrokens == null)
+                return string.Empty;
+            return string.Join(" ; ", IOSBrokens.Select(v => v.ToString()));
+        }
+        
     }
 
     public static class LionMaxAdapterStabiliser
@@ -251,7 +277,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                         if (string.IsNullOrEmpty(networkCodeName))
                             continue;
 
-                        AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild);
+                        AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild, androidBrokens, iosBrokens);
                         adNetworks.Add(adNetwork);
                     }
                     catch (Exception ex)
@@ -307,7 +333,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 AdNetwork currentNetwork = AdNetworks.Find(x => x.NetworkCodeName == adNetworkName);
                 if (currentNetwork == null)
                 {
-                    currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "");
+                    currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "", "", "");
                     AdNetworks.Add(currentNetwork);
                 }
                 currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);

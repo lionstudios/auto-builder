@@ -8,6 +8,8 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
     
     public class LionMaxAdapterServiceWindow : EditorWindow
     {
+        private const int COLUMN_WIDTH = 120;
+        
         List<AdNetwork> adNetworks;
         [MenuItem("LionStudios/Adapter Service")]
         public static void ShowWindow()
@@ -56,14 +58,16 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
             EditorGUILayout.BeginHorizontal();
 
-            GUILayout.Label("Network Name", GUILayout.Width(150));
-            GUILayout.Label("Code Name", GUILayout.Width(150));
+            GUILayout.Label("Network Name", GUILayout.Width(COLUMN_WIDTH));
+            GUILayout.Label("Code Name", GUILayout.Width(COLUMN_WIDTH));
 
-            GUILayout.Label($"Android Installed", GUILayout.Width(150));
-            GUILayout.Label($"Android Stable", GUILayout.Width(150));
+            GUILayout.Label($"Android Installed", GUILayout.Width(COLUMN_WIDTH));
+            GUILayout.Label($"Android Stable", GUILayout.Width(COLUMN_WIDTH));
+            GUILayout.Label($"Android Broken", GUILayout.Width(COLUMN_WIDTH));
 
-            GUILayout.Label($"iOS Installed", GUILayout.Width(150));
-            GUILayout.Label($"iOS Stable", GUILayout.Width(150));
+            GUILayout.Label($"iOS Installed", GUILayout.Width(COLUMN_WIDTH));
+            GUILayout.Label($"iOS Stable", GUILayout.Width(COLUMN_WIDTH));
+            GUILayout.Label($"iOS Broken", GUILayout.Width(COLUMN_WIDTH));
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
@@ -86,52 +90,27 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
                 EditorGUILayout.BeginHorizontal(gsTest);
 
-                GUILayout.Label(network.NetworkName, GUILayout.Width(150));
-                GUILayout.Label(network.NetworkCodeName, GUILayout.Width(150));
+                GUILayout.Label(network.NetworkName, GUILayout.Width(COLUMN_WIDTH));
+                GUILayout.Label(network.NetworkCodeName, GUILayout.Width(COLUMN_WIDTH));
 
-                if (network.AndroidBuild == null)
-                {
-                    GUI.color = originalColor;
-                }
-                else if (network.InstalledAndroidVersion == network.AndroidBuild)
-                {
-                    GUI.color = Color.green;
-                }
-                else if (network.InstalledAndroidVersion >= network.AndroidBuild)
-                {
-                    GUI.color = Color.yellow;
-                }
-                else
-                {
-                    GUI.color = Color.red;
-                }
+                GUI.color = GetInstalledVersionColor(network.InstalledAndroidVersion, network.AndroidBuild, network.AndroidBrokens);
 
-                GUILayout.Label($"{network.InstalledAndroidVersion}", GUILayout.Width(150));
-                GUILayout.Label($"{network.AndroidBuild}", GUILayout.Width(150));
-
+                GUILayout.Label($"{network.InstalledAndroidVersion}", GUILayout.Width(COLUMN_WIDTH));
+                
                 GUI.color = originalColor;
+                
+                GUILayout.Label($"{network.AndroidBuild}", GUILayout.Width(COLUMN_WIDTH));
+                GUILayout.Label($"{network.GetAndroidBrokensString()}", GUILayout.Width(COLUMN_WIDTH));
 
-                if (network.IOSBuild == null)
-                {
-                    GUI.color = originalColor;
-                }
-                else if (network.InstalledIosVersion == network.IOSBuild)
-                {
-                    GUI.color = Color.green;
-                }
-                else if (network.InstalledIosVersion >= network.IOSBuild)
-                {
-                    GUI.color = Color.yellow;
-                }
-                else
-                {
-                    GUI.color = Color.red;
-                }
+                GUI.color = GetInstalledVersionColor(network.InstalledIosVersion, network.IOSBuild, network.IOSBrokens);
 
-                GUILayout.Label($"{network.InstalledIosVersion}", GUILayout.Width(150));
-                GUILayout.Label($"{network.IOSBuild}", GUILayout.Width(150));
-
+                GUILayout.Label($"{network.InstalledIosVersion}", GUILayout.Width(COLUMN_WIDTH));
+                
                 GUI.color = originalColor;
+                
+                GUILayout.Label($"{network.IOSBuild}", GUILayout.Width(COLUMN_WIDTH));
+                GUILayout.Label($"{network.GetIOSBrokensString()}", GUILayout.Width(COLUMN_WIDTH));
+
 
                 EditorGUILayout.EndHorizontal();
 
@@ -146,6 +125,17 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             {
                 FixInstalledAdNetworkVersions();
             }
+        }
+
+        private Color GetInstalledVersionColor(Version installed, Version lastStable, Version[] brokens)
+        {
+            if (brokens != null && brokens.Contains(installed))
+                return Color.red;
+            if (installed == lastStable)
+                return Color.green;
+            if (installed >= lastStable)
+                return Color.yellow;
+            return Color.red;
         }
 
         private void FixInstalledAdNetworkVersions()
