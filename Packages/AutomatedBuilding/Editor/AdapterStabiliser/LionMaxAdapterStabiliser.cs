@@ -210,7 +210,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 {
                     int result = EditorUtility.DisplayDialogComplex("Outdated Adapters",
                         "Some adapters are out of date. Do you want to update the adapters?",
-                        "Update",
+                        "Review & Update",
                         "Ignore",
                         "Ignore - Do not ask again for this session");
                     if (result == 0)
