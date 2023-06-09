@@ -121,6 +121,11 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
             EditorGUILayout.Space();
 
+            if (GUILayout.Button("Refresh"))
+            {
+                Refresh();
+            }
+
             if (GUILayout.Button("Update Adapters to QA Stable Versions"))
             {
                 FixInstalledAdNetworkVersions();
@@ -141,6 +146,13 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         private void FixInstalledAdNetworkVersions()
         {
             LionMaxAdapterStabiliser.LoadInstalledNetworkVersions(true);
+        }
+
+        private async void Refresh()
+        {
+            await LionMaxAdapterStabiliser.InitAdNetworkData();
+            adNetworks = LionMaxAdapterStabiliser.AdNetworks;
+            Repaint();
         }
     }
 }
