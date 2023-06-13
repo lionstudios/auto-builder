@@ -15,7 +15,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         }
         
         public Version(string version)
-            : this(version.Trim().Split(".").Select(s => int.Parse(s)).ToArray()) { }
+            : this(version.Trim().Split('.').Select(s => int.Parse(s)).ToArray()) { }
 
         public int CompareTo(object obj)
         {
