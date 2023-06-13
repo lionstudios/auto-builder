@@ -201,8 +201,8 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 bool showDialog = !SessionState.GetBool("AdNetworkVersionsMismatchOptOut", false);
                 if (showDialog)
                 {
-                    int result = EditorUtility.DisplayDialogComplex("Outdated Adapters",
-                        "Some adapters are out of date. Do you want to update the adapters?",
+                    int result = EditorUtility.DisplayDialogComplex("Outdated or broken ad adapters",
+                        "Some adapters are out of date. Do you want to update them?",
                         "Review & Update",
                         "Ignore",
                         "Ignore - Do not ask again for this session");
