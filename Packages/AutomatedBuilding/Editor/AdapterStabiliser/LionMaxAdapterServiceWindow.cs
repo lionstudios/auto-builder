@@ -41,17 +41,28 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
 
         private void OnGUI()
         {
+            EditorGUILayout.Space();
             if (adNetworks == null)
             {
+                EditorGUILayout.BeginHorizontal();
                 GUILayout.Label("Couldn't fetch stable ad networks. Check your internet connection.", EditorStyles.boldLabel);
-
+                EditorGUILayout.Space();
+                if (GUILayout.Button("Refresh", GUILayout.Width(100f)))
+                    Refresh();
+                EditorGUILayout.EndHorizontal();
                 return;
             }
-            EditorGUILayout.Space();
 
+            EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Installed Ad Networks", EditorStyles.boldLabel);
 
             EditorGUILayout.Space();
+
+            if (GUILayout.Button("Refresh", GUILayout.Width(100f)))
+            {
+                Refresh();
+            }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginVertical(GUI.skin.box);
 
@@ -118,11 +129,6 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space();
-
-            if (GUILayout.Button("Refresh"))
-            {
-                Refresh();
-            }
 
             if (GUILayout.Button("Update Adapters to QA Stable Versions"))
             {
