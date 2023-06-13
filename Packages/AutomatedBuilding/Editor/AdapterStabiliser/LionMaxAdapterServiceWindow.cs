@@ -10,7 +10,6 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
     {
         private const int COLUMN_WIDTH = 120;
         
-        List<AdNetwork> adNetworks;
         [MenuItem("LionStudios/Adapter Service")]
         public static void ShowWindow()
         {
@@ -18,11 +17,6 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             window.titleContent = new GUIContent("Lion Max Adapter Service");
             window.minSize = new Vector2(1000, 1200);
             window.maxSize = new Vector2(1000, 1200);
-        }
-
-        private void OnEnable()
-        {
-            adNetworks = LionMaxAdapterStabiliser.AdNetworks;
         }
 
         private Texture2D MakeTex(int width, int height, Color col)
@@ -42,7 +36,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         private void OnGUI()
         {
             EditorGUILayout.Space();
-            if (adNetworks == null)
+            if (LionMaxAdapterStabiliser.AdNetworks == null)
             {
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label("Couldn't fetch stable ad networks. Check your internet connection.", EditorStyles.boldLabel);
@@ -90,7 +84,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             GUIStyle gsTest = new GUIStyle();
 
             int rowColorIndex = 0;
-            foreach (var network in adNetworks.OrderBy(x => x.NetworkName))
+            foreach (var network in LionMaxAdapterStabiliser.AdNetworks.OrderBy(x => x.NetworkName))
             {
                 if (network.InstalledAndroidVersion == null && network.InstalledIosVersion == null)
                 {
@@ -155,7 +149,6 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         private async void Refresh()
         {
             await LionMaxAdapterStabiliser.InitAdNetworkData();
-            adNetworks = LionMaxAdapterStabiliser.AdNetworks;
             Repaint();
         }
     }
