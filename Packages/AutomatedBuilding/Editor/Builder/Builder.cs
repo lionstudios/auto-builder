@@ -132,13 +132,10 @@ namespace LionStudios.Editor.AutoBuilder
                 {
                     EditorApplication.Exit(report.summary.result == BuildResult.Succeeded ? 0 : 2);
                 }
-                
-                AssetDatabase.StopAssetEditing();
             }
-            catch (Exception e)
+            finally
             {
                 AssetDatabase.StopAssetEditing();
-                Debug.LogError(e.Message);
             }
         }
 
@@ -167,47 +164,39 @@ namespace LionStudios.Editor.AutoBuilder
         private BuildPlayerOptions Initialize(BuildTargetGroup buildTargetGroup, string[] devAdditionalDefSymbols, 
             ScriptingImplementation scriptingImplementation, out bool isProduction, out bool validateAdapters)
         {
-            try
+            var cmdArgs = _cmdArgsProvider.Args;
+            var cmdParamsMap = new Dictionary<string, string>
             {
-                var cmdArgs = _cmdArgsProvider.Args;
-                var cmdParamsMap = new Dictionary<string, string>
-                {
-                    { "environment", "development" },
-                    { "versionNumber", "1" },
-                    { "buildNumber", string.Empty },
-                    { "buildName", string.Empty },
-                    { "reimportAssets", string.Empty },
-                    { "validateAdapters", "true" },
-                };
+                { "environment", "development" },
+                { "versionNumber", "1" },
+                { "buildNumber", string.Empty },
+                { "buildName", string.Empty },
+                { "reimportAssets", string.Empty },
+                { "validateAdapters", "true" },
+            };
 
-                SetCmdParamsMap(cmdArgs, cmdParamsMap);
+            SetCmdParamsMap(cmdArgs, cmdParamsMap);
 
-                isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
-                validateAdapters = cmdParamsMap["validateAdapters"].Equals("true", StringComparison.InvariantCultureIgnoreCase);
+            isProduction = cmdParamsMap["environment"].Equals("production", StringComparison.InvariantCultureIgnoreCase);
+            validateAdapters = cmdParamsMap["validateAdapters"].Equals("true", StringComparison.InvariantCultureIgnoreCase);
 
-                CreateBuildDirectory(BuildLocation);
+            CreateBuildDirectory(BuildLocation);
 
-                Debug.unityLogger.filterLogType = isProduction ? LogType.Error : LogType.Log;
+            Debug.unityLogger.filterLogType = isProduction ? LogType.Error : LogType.Log;
 
-                if (devAdditionalDefSymbols != null && devAdditionalDefSymbols.Length > 0) 
-                {
-                    var currentDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-                    currentDefineSymbols = GetDefineSymbolsStr(devAdditionalDefSymbols, currentDefineSymbols, isProduction);
-                    PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, currentDefineSymbols);
-                }
-                
-                PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
-                CheckIfReimportRequired(cmdParamsMap);
-                var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction);
-                buildPlayerOptions.options = isProduction ? BuildOptions.None : BuildOptions.Development;
-
-                return buildPlayerOptions;
-            }
-            catch (Exception e)
+            if (devAdditionalDefSymbols != null && devAdditionalDefSymbols.Length > 0) 
             {
-                Debug.LogError(e.Message);
-                throw;
+                var currentDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+                currentDefineSymbols = GetDefineSymbolsStr(devAdditionalDefSymbols, currentDefineSymbols, isProduction);
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, currentDefineSymbols);
             }
+            
+            PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
+            CheckIfReimportRequired(cmdParamsMap);
+            var buildPlayerOptions = InitializeSpecific(cmdParamsMap, isProduction);
+            buildPlayerOptions.options = isProduction ? BuildOptions.None : BuildOptions.Development;
+
+            return buildPlayerOptions;
         }
 
         private static string GetDefineSymbolsStr(string[] additionalSymbols, string currentDefineSymbols, 
