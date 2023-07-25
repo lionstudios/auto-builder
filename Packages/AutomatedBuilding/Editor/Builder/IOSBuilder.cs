@@ -190,7 +190,7 @@ namespace LionStudios.Editor.AutoBuilder
 
             proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
 
-           
+
             if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
             {
                 // Set Manual Provisioning Profiles One Signal Notification Service Extension
@@ -200,7 +200,7 @@ namespace LionStudios.Editor.AutoBuilder
                 proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
                 proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
-            
+
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
                 proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
@@ -248,51 +248,7 @@ namespace LionStudios.Editor.AutoBuilder
 
             #region MAX IOS 14 SKAdNetwork Add
 
-            HashSet<string> skAdNetworkIds = GetSKAdNetworkIds();
-
-            if (skAdNetworkIds != null && skAdNetworkIds.Count > 0)
-            {
-                Debug.Log("Staring to add SKAddNetwork IDs!");
-
-                if (rootDict.values.TryGetValue("SKAdNetworkItems", out PlistElement skAdNetworkItems))
-                {
-                    PlistElementArray skAdNetworkItemsArray;
-
-                    HashSet<string> existingSKAdNetworkIds = new HashSet<string>();
-                    if (skAdNetworkItems != null && skAdNetworkItems.GetType() == typeof(PlistElementArray))
-                    {
-                        skAdNetworkItemsArray = rootDict.values["SKAdNetworkItems"].AsArray();
-
-                        var plistElementDictionaries = skAdNetworkItemsArray.values
-                            .Where(plistElement => plistElement.GetType() == typeof(PlistElementDict));
-                        foreach (var plistElement in plistElementDictionaries)
-                        {
-                            plistElement.AsDict().values.TryGetValue("SKAdNetworkIdentifier",
-                                out PlistElement existingSKAdNetworkId);
-                            if (existingSKAdNetworkId == null ||
-                                existingSKAdNetworkId.GetType() != typeof(PlistElementString) ||
-                                string.IsNullOrEmpty(existingSKAdNetworkId.AsString())) continue;
-
-                            existingSKAdNetworkIds.Add(existingSKAdNetworkId.AsString());
-                        }
-                    }
-                    else
-                    {
-                        skAdNetworkItemsArray = rootDict.CreateArray("SKAdNetworkItems");
-                    }
-
-                    foreach (var skAdNetworkId in skAdNetworkIds)
-                    {
-                        if (!existingSKAdNetworkIds.Contains(skAdNetworkId))
-                        {
-                            PlistElementDict skAdNetworkItemDict = new PlistElementDict();
-                            skAdNetworkItemDict.SetString("SKAdNetworkIdentifier", skAdNetworkId);
-                            skAdNetworkItemsArray.values.Add(skAdNetworkItemDict);
-                            Debug.Log("Adding new: " + skAdNetworkItemsArray.values.Count);
-                        }
-                    }
-                }
-            }
+            AddSkAdNetworksInfo(plist);
 
             #endregion
 
@@ -353,7 +309,7 @@ namespace LionStudios.Editor.AutoBuilder
                         ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
                         oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
                     }
-            
+
                     provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
                 }
             }
@@ -401,6 +357,51 @@ namespace LionStudios.Editor.AutoBuilder
         #endregion
 
         #region Ios Support Methods
+
+        private static void AddSkAdNetworksInfo(PlistDocument plist)
+        {
+            HashSet<string> skAdNetworkIds = GetSKAdNetworkIds();
+            if (skAdNetworkIds == null || skAdNetworkIds.Count < 1)
+            {
+                Debug.Log("SK Ad Network IDs count is 0 ");
+                return;
+            }
+
+
+            Debug.Log("Start Processing SK IDs from Settings");
+            // Check if we have a valid list of SKAdNetworkIds that need to be added.
+
+
+            plist.root.values.TryGetValue("SKAdNetworkItems", out var skAdNetworkItems);
+            var existingSkAdNetworkIds = new HashSet<string>();
+            // Check if SKAdNetworkItems array is already in the Plist document and collect all the IDs that are already present.
+            if (skAdNetworkItems != null && skAdNetworkItems.GetType() == typeof(PlistElementArray))
+            {
+                var plistElementDictionaries = skAdNetworkItems.AsArray().values.Where(plistElement => plistElement.GetType() == typeof(PlistElementDict));
+                foreach (var plistElement in plistElementDictionaries)
+                {
+                    plistElement.AsDict().values.TryGetValue("SKAdNetworkIdentifier", out var existingId);
+                    if (existingId == null || existingId.GetType() != typeof(PlistElementString) || string.IsNullOrEmpty(existingId.AsString())) continue;
+
+                    existingSkAdNetworkIds.Add(existingId.AsString());
+                }
+            }
+            else
+            {
+                skAdNetworkItems = plist.root.CreateArray("SKAdNetworkItems");
+            }
+
+            foreach (var skAdNetworkId in skAdNetworkIds)
+            {
+                if (existingSkAdNetworkIds.Contains(skAdNetworkId)) continue;
+
+                var skAdNetworkItemDict = skAdNetworkItems.AsArray().AddDict();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("Adding ID to plist file: " + skAdNetworkId);
+#endif
+                skAdNetworkItemDict.SetString("SKAdNetworkIdentifier", skAdNetworkId);
+            }
+        }
 
         public static HashSet<string> GetSKAdNetworkIds()
         {
