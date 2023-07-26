@@ -1,8 +1,8 @@
 {
   "name": "com.lionstudios.local.autobuilder",
   "lionId": "BLD",
-  "author": "Lion Studios",
-  "displayName": "Lion Auto Builder",
+  "author": "Lion Studios - Advanced",
+  "displayName": "Lion - Build Tools",
   "version": "0.0.0",
   "description": "Auto builder module for Jenkins Jobs",
   "unity": "2019.4",
