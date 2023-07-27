@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3]
 - Remove exception catch to allow quick and hard fails
+- Fix SK ad network ids
 
 ## [0.2.2]
 - Add refresh button to adapters window
