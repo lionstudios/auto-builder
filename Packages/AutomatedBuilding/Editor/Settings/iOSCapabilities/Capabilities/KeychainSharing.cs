@@ -16,9 +16,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class KeychainSharingCapability : Capability<KeychainSharingSettings>
     {
-        public KeychainSharingCapability(bool enabled) : base(enabled)
-        {
-        }
+        public KeychainSharingCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

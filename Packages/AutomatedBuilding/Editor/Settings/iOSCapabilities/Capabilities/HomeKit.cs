@@ -10,9 +10,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class HomeKitCapability : Capability<EmptyCapabilitySettings>
     {
-        public HomeKitCapability(bool enabled) : base(enabled)
-        {
-        }
+        public HomeKitCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

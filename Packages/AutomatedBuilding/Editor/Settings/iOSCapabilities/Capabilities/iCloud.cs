@@ -20,9 +20,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class iCloudCapability : Capability<iCloudCapabilitySettings>
     {
-        public iCloudCapability(bool enabled) : base(enabled)
-        {
-        }
+        public iCloudCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

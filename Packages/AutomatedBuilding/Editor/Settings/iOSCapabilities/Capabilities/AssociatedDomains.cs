@@ -16,9 +16,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class AssociatedDomainsCapability : Capability<AssociatedDomainsCapabilitySettings>
     {
-        public AssociatedDomainsCapability(bool enabled) : base(enabled)
-        {
-        }
+        public AssociatedDomainsCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

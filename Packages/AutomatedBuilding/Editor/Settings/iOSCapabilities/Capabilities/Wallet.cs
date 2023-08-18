@@ -16,9 +16,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class WalletCapability : Capability<WalletCapabilitySettings>
     {
-        public WalletCapability(bool enabled) : base(enabled)
-        {
-        }
+        public WalletCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

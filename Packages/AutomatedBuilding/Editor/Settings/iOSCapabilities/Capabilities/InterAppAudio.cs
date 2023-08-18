@@ -10,9 +10,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class InterAppAudioCapability : Capability<EmptyCapabilitySettings>
     {
-        public InterAppAudioCapability(bool enabled) : base(enabled)
-        {
-        }
+        public InterAppAudioCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)

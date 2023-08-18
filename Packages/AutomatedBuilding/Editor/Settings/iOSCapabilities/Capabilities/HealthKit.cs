@@ -10,9 +10,7 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class HealthKitCapability : Capability<EmptyCapabilitySettings>
     {
-        public HealthKitCapability(bool enabled) : base(enabled)
-        {
-        }
+        public HealthKitCapability(bool enabled) : base(enabled) {}
         
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
