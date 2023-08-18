@@ -10,6 +10,8 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class GameCenterCapability : Capability<EmptyCapabilitySettings>
     {
+        public GameCenterCapability(bool enabled) : base(enabled) {}
+        
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {

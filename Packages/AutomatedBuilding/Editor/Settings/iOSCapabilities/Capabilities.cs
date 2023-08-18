@@ -8,43 +8,43 @@ namespace LionStudios.Editor.AutoBuilder
     public class Capabilities
     {
 
-        public InAppPurchaseCapability inAppPurchase;
+        public InAppPurchaseCapability inAppPurchase = new InAppPurchaseCapability(true);
 
-        public DataProtectionCapability dataProtection;
+        public DataProtectionCapability dataProtection = new DataProtectionCapability(false);
 
-        public GameCenterCapability gameCenter;
+        public GameCenterCapability gameCenter = new GameCenterCapability(false);
 
-        public HealthKitCapability healthKit;
+        public HealthKitCapability healthKit = new HealthKitCapability(false);
 
-        public HomeKitCapability homeKit;
+        public HomeKitCapability homeKit = new HomeKitCapability(false);
 
-        public WirelessAccessoryConfigurationCapability wirelessAccessoryConfiguration;
+        public WirelessAccessoryConfigurationCapability wirelessAccessoryConfiguration = new WirelessAccessoryConfigurationCapability(false);
 
-        public AccessWifiInformationCapability accessWifiInformation;
+        public AccessWifiInformationCapability accessWifiInformation= new AccessWifiInformationCapability(false);
 
-        public PersonalVPNCapability personalVPN;
+        public PersonalVPNCapability personalVPN = new PersonalVPNCapability(false);
 
-        public InterAppAudioCapability interAppAudio;
+        public InterAppAudioCapability interAppAudio = new InterAppAudioCapability(false);
 
-        public SignInWithAppleCapability signInWithApple;
+        public SignInWithAppleCapability signInWithApple = new SignInWithAppleCapability(false);
 
-        public SiriCapability siri;
+        public SiriCapability siri = new SiriCapability(false);
 
-        public RemoteNotificationsCapability remoteNotifications;
+        public RemoteNotificationsCapability remoteNotifications = new RemoteNotificationsCapability(false);
 
-        public iCloudCapability iCloud;
+        public iCloudCapability iCloud = new iCloudCapability(false);
 
-        public AppGroupsCapability appGroups;
+        public AppGroupsCapability appGroups = new AppGroupsCapability(false);
 
-        public MapsCapability maps;
+        public MapsCapability maps = new MapsCapability(false);
 
-        public WalletCapability wallet;
+        public WalletCapability wallet = new WalletCapability(false);
 
-        public ApplePayCapability applePay;
+        public ApplePayCapability applePay = new ApplePayCapability(false);
 
-        public AssociatedDomainsCapability associatedDomains;
+        public AssociatedDomainsCapability associatedDomains = new AssociatedDomainsCapability(false);
 
-        public KeychainSharingCapability keychainSharing;
+        public KeychainSharingCapability keychainSharing = new KeychainSharingCapability(false);
 
         public List<ICapability> AllCapabilities => new List<ICapability>()
         {

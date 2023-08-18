@@ -20,6 +20,8 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class MapsCapability : Capability<MapsCapabilitySettings>
     {
+        public MapsCapability(bool enabled) : base(enabled) {}
+        
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {

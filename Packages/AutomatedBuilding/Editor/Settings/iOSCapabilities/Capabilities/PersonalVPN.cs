@@ -10,6 +10,8 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class PersonalVPNCapability : Capability<EmptyCapabilitySettings>
     {
+        public PersonalVPNCapability(bool enabled) : base(enabled) {}
+        
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {
