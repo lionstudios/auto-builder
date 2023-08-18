@@ -10,6 +10,10 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class AccessWifiInformationCapability : Capability<EmptyCapabilitySettings>
     {
+        public AccessWifiInformationCapability(bool enabled) : base(enabled)
+        {
+        }
+        
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {

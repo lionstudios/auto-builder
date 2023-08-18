@@ -16,6 +16,11 @@ namespace LionStudios.Editor.AutoBuilder
 
         [SerializeField] public T settings = default;
 
+        protected Capability(bool enabled)
+        {
+            this.enabled = enabled;
+        }
+
 #if UNITY_IOS
         public void AddCapabilityIfEnabled(ProjectCapabilityManager capabilityManager)
         {

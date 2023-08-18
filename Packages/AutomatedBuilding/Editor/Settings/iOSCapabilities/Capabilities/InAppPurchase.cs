@@ -10,11 +10,11 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class InAppPurchaseCapability : Capability<EmptyCapabilitySettings>
     {
-        public InAppPurchaseCapability()
+        public InAppPurchaseCapability(bool enabled) : base(enabled)
         {
-            enabled = true;
+            
         }
-        
+
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {
