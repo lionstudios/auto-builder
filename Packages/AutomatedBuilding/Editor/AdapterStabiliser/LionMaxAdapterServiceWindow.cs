@@ -128,6 +128,10 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             {
                 FixInstalledAdNetworkVersions();
             }
+            if (GUILayout.Button("Update privacy links"))
+            {
+                LionMaxAdapterStabiliser.AddPrivacyLinks();
+            }
         }
 
         private Color GetInstalledVersionColor(Version installed, Version lastStable, List<Version> brokens)

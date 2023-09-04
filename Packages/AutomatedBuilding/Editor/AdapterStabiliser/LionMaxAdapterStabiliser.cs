@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using UnityEditor;
@@ -20,11 +21,12 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
         public Version IOSBuild { get; private set; }
         public List<Version> AndroidBrokens { get; private set; }
         public List<Version> IOSBrokens { get; private set; }
+        public string PrivacyLinks { get; private set; }
 
         public Version InstalledAndroidVersion { get; private set; }
         public Version InstalledIosVersion { get; private set; }
 
-        public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild, string androidBrokens, string iOSBrokens)
+        public AdNetwork(string networkName, string networkCodeName, string androidBuild, string iosBuild, string androidBrokens, string iOSBrokens, string privacyLinks)
         {
             NetworkName = networkName;
             NetworkCodeName = networkCodeName;
@@ -34,6 +36,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 IOSBuild = new Version(iosBuild);
             AndroidBrokens = StringToVersionList(androidBrokens);
             IOSBrokens = StringToVersionList(iOSBrokens);
+            PrivacyLinks = privacyLinks;
         }
 
         List<Version> StringToVersionList(string s)
@@ -276,11 +279,12 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                         string iosBuild = values[3];
                         string androidBrokens = values[4];
                         string iosBrokens = values[5];
+                        string privacyLinks = values[6];
 
                         if (string.IsNullOrEmpty(networkCodeName))
                             continue;
 
-                        AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild, androidBrokens, iosBrokens);
+                        AdNetwork adNetwork = new AdNetwork(networkName, networkCodeName, androidBuild, iosBuild, androidBrokens, iosBrokens, privacyLinks);
                         adNetworks.Add(adNetwork);
                     }
                     catch (Exception ex)
@@ -291,6 +295,74 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
 
             return adNetworks;
+        }
+
+        static Type GetType(string typeName)
+        {
+            var type = Type.GetType(typeName);
+            if (type != null) return type;
+
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = a.GetType(typeName);
+                if (type != null)
+                    return type;
+            }
+
+            Debug.LogError($"{typeName} not found!");
+
+            return null;
+        }
+
+        public static void AddPrivacyLinks()
+        {
+            Type applovinInternalSettingsType = GetType("AppLovinMax.Scripts.IntegrationManager.Editor.AppLovinInternalSettings");
+            if (applovinInternalSettingsType == null)
+            {
+                Debug.LogError("Error adding privacy links: AppLovinInternalSettings class not found");
+                return;
+            }
+
+            PropertyInfo instanceProperty = applovinInternalSettingsType.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            if (instanceProperty == null)
+            {
+                Debug.LogError("Error adding privacy links: AppLovinInternalSettings.Instance property not found");
+                return;
+            }
+
+            object applovinInternalSettings = instanceProperty.GetValue(null, null);
+
+            FieldInfo field = applovinInternalSettingsType.GetField("consentFlowAdvertisingPartnerUrls", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field == null)
+            {
+                Debug.LogError("Error adding privacy links: AppLovinInternalSettings.Instance.consentFlowAdvertisingPartnerUrls variable not found");
+                return;
+            }
+            
+            List<string> privacyLinks = new List<string>();
+            foreach (AdNetwork adNetwork in AdNetworks)
+            {
+                if (adNetwork.InstalledAndroidVersion == null && adNetwork.InstalledIosVersion == null)
+                {
+                    continue;
+                }
+                if(string.IsNullOrEmpty(adNetwork.PrivacyLinks))
+                {
+                    continue;
+                }
+                privacyLinks.Add(adNetwork.PrivacyLinks);
+            }
+            string combinedPrivacyLinks = string.Join(",", privacyLinks.ToArray());
+            string currentPrivacyLinks = (string)field.GetValue(applovinInternalSettings);
+            field.SetValue(applovinInternalSettings, combinedPrivacyLinks);
+
+            MethodInfo saveMethod = applovinInternalSettingsType.GetMethod("Save", BindingFlags.Public | BindingFlags.Instance);
+            if (saveMethod == null)
+            {
+                Debug.LogError("Error adding privacy links: AppLovinInternalSettings.Instance.Save method not found");
+                return;
+            }
+            saveMethod.Invoke(applovinInternalSettings, null);
         }
 
         public static void LoadInstalledNetworkVersions(bool fix)
@@ -336,7 +408,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 AdNetwork currentNetwork = AdNetworks.Find(x => x.NetworkCodeName == adNetworkName);
                 if (currentNetwork == null)
                 {
-                    currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "", "", "");
+                    currentNetwork = new AdNetwork(adNetworkName, adNetworkName, "", "", "", "", "");
                     AdNetworks.Add(currentNetwork);
                 }
                 currentNetwork.SetInstalledVersions(installedAndroidVersion, installedIosVersion);
