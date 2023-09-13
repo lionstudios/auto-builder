@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using LionStudios.Suite.Core;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -27,7 +28,8 @@ namespace LionStudios.Editor.AutoBuilder
             get
             {
                 if (_iosBuildSettings == null)
-                    _iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                    //_iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                    _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iosBuildSettings;
                 return _iosBuildSettings;
             }
         }
@@ -100,19 +102,6 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 Directory.CreateDirectory(buildPathDi.Parent.FullName);
             }
-        }
-
-        [InitializeOnLoadMethod]
-        private static void SetupProject()
-        {
-            if (AssetDatabase.LoadAllAssetsAtPath(IOS_SETTINGS_PATH).Length == 0)
-            {
-                Directory.CreateDirectory(SETTINGS_PATH);
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<IOSBuildSettings>(), IOS_SETTINGS_PATH);
-            }
-
-            if (!Directory.Exists(PROVISIONING_PROFILE_PATH))
-                Directory.CreateDirectory(PROVISIONING_PROFILE_PATH);
         }
 
 #if UNITY_IOS

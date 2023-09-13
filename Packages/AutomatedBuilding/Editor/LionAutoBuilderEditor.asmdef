@@ -1,7 +1,9 @@
 {
     "name": "LionAutoBuilderEditor",
-    "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:95ba433457c4a1b409067cba40cfd742",
+        "GUID:53231f761774eb84cb7bd616b06ed6c2"
+    ],
     "includePlatforms": [
         "Editor"
     ],
