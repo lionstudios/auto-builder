@@ -16,7 +16,7 @@ namespace LionStudios.Editor.AutoBuilder
         static readonly string IOS_SETTINGS_PATH = $"{SETTINGS_PATH}/IOSBuildSettings.asset";
         static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
 
-        [InitializeOnLoadMethod]
+        //[InitializeOnLoadMethod]
         public static void Migrate()
         {
             LionSettingsService.InitializeService();

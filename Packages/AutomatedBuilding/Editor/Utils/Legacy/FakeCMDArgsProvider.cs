@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LionStudios.Editor.AutoBuilder.Legacy
 {
-    public class FakeCMDArgsProvider : ScriptableObject , ICMDArgsProvider
+    public class FakeCMDArgsProvider : LegacySettingBase , ICMDArgsProvider
     {
         public enum Environment
         { 

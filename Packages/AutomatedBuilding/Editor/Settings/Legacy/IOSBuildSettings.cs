@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LionStudios.Editor.AutoBuilder.Legacy
 {
-    public class IOSBuildSettings : ScriptableObject
+    public class IOSBuildSettings : LegacySettingBase
     {
         private enum Organization
         {
