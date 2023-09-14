@@ -5,11 +5,11 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.lionstudios.release.lionkitcore": "2.6.6-pr.9"
+        "com.lionstudios.release.lionkitcore": "2.6.5"
       }
     },
     "com.lionstudios.release.lionkitcore": {
-      "version": "2.6.6-pr.9",
+      "version": "2.6.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {
