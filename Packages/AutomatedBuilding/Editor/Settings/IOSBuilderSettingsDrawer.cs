@@ -7,41 +7,28 @@ namespace LionStudios.Editor.AutoBuilder
     [CustomPropertyDrawer(typeof(IOSBuildSettings))]
     public class IOSBuilderSettingsDrawer : PropertyDrawer
     {
-        bool showUI = false;
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            showUI = EditorGUILayout.Foldout(showUI, "iOS Build Settings", true);
-            if (showUI)
+            EditorGUILayout.PropertyField(property);
+            if (property.isExpanded)
             {
                 EditorGUI.indentLevel++;
-                SerializedProperty iterator = property.Copy();
-                bool enterChildren = true;
-
-                while (iterator.NextVisible(enterChildren))
+#if UNITY_IOS
+                if (IndentedGUILayout.Button(new GUIContent("Create  Export.plist file")))
                 {
-                    if (iterator.propertyPath.Contains("ios"))
-                    {
-                        enterChildren = false;
-                        EditorGUILayout.PropertyField(iterator);
-                    }
+                    IOSBuilder.CreateExportPlist();
                 }
-                GUILayout.BeginHorizontal();
-                {
-                    GUILayout.FlexibleSpace();
-                    if (GUILayout.Button("Create  Export.plist file", GUILayout.Width(250), GUILayout.Height(20)))
-                    {
-                        IOSBuilder.CreateExportPlist();
-                    }
-
-                    GUILayout.FlexibleSpace();
-                }
-                GUILayout.EndHorizontal();
-
-
+#else
+                EditorGUI.BeginDisabledGroup(true);
+                IndentedGUILayout.Button(new GUIContent("Create  Export.plist file"));
+                EditorGUI.EndDisabledGroup();
+                Color c = GUI.color;
+                GUI.color = Color.yellow;
+                EditorGUILayout.LabelField("Switch to iOS platform to use this button.");
+                GUI.color = c;
+#endif
                 EditorGUI.indentLevel--;
             }
-            // EditorGUI.EndProperty();
         }
     }
 }
