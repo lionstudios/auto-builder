@@ -27,7 +27,7 @@ public static class AutoBuilder
     public static async void BuildAndroidTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.Android);
-        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().localBuildSettings;
+        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().local;
 
         _builder = new AndroidBuilder(fakeCMDArgsProvider);
         await _builder.Build();
@@ -37,7 +37,7 @@ public static class AutoBuilder
     public static async void BuildIOSTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.iOS);
-        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().localBuildSettings;
+        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().local;
 
         _builder = new IOSBuilder(fakeCMDArgsProvider);
         await _builder.Build();

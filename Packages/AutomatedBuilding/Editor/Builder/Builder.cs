@@ -31,7 +31,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 if (_commonBuildSettings == null)
                     //_commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
-                    _commonBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().commonBuildSettings;
+                    _commonBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().common;
 
                 return _commonBuildSettings;
             }

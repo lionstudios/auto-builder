@@ -28,7 +28,7 @@ namespace LionStudios.Editor.AutoBuilder
             if(fakeCMDArgsProvider != null)
             {
                 string jsonString = JsonUtility.ToJson(fakeCMDArgsProvider); 
-                settings.localBuildSettings = JsonUtility.FromJson<FakeCMDArgsProvider>(jsonString); 
+                settings.local = JsonUtility.FromJson<FakeCMDArgsProvider>(jsonString); 
                 //AssetDatabase.DeleteAsset(FAKE_CMD_ARGS_PATH);
             }
 
@@ -36,7 +36,7 @@ namespace LionStudios.Editor.AutoBuilder
             if (commonSettings != null)
             {
                 string jsonString = JsonUtility.ToJson(commonSettings);
-                settings.commonBuildSettings = JsonUtility.FromJson<CommonBuildSettings>(jsonString);
+                settings.common = JsonUtility.FromJson<CommonBuildSettings>(jsonString);
                 //AssetDatabase.DeleteAsset(COMMON_SETTINGS_PATH);
             }
 
@@ -44,7 +44,7 @@ namespace LionStudios.Editor.AutoBuilder
             if (iosSettings != null)
             {
                 string jsonString = JsonUtility.ToJson(iosSettings);
-                settings.iosBuildSettings = JsonUtility.FromJson<IOSBuildSettings>(jsonString);
+                settings.iOS = JsonUtility.FromJson<IOSBuildSettings>(jsonString);
                 //AssetDatabase.DeleteAsset(IOS_SETTINGS_PATH);
             }
 
@@ -52,7 +52,7 @@ namespace LionStudios.Editor.AutoBuilder
             if (androidSettings != null)
             {
                 string jsonString = JsonUtility.ToJson(androidSettings);
-                settings.androidBuildSettings = JsonUtility.FromJson<AndroidBuildSettings>(jsonString);
+                settings.android = JsonUtility.FromJson<AndroidBuildSettings>(jsonString);
                 //AssetDatabase.DeleteAsset(ANDROID_SETTINGS_PATH);
             }
             settingsProvider.ApplySettings(settings); 

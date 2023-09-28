@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 namespace LionStudios.Editor.AutoBuilder
 {
     [Serializable]
-    public class AndroidBuildSettings
+    public class AndroidBuildSettings : BuildSettingsSectionBase
     {
         [FormerlySerializedAs("KEY_STORE_PATH")]
         public string KeystorePath = "keystore/keystore.keystore";

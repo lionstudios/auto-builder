@@ -29,7 +29,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 if (_iosBuildSettings == null)
                     //_iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
-                    _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iosBuildSettings;
+                    _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iOS;
                 return _iosBuildSettings;
             }
         }

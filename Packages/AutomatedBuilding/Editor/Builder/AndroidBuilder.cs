@@ -19,7 +19,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 if (_androidBuildSettings == null)
                     //_androidBuildSettings = AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH);
-                    _androidBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().androidBuildSettings;
+                    _androidBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().android;
 
                 return _androidBuildSettings;
             }

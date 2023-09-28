@@ -5,7 +5,7 @@ using UnityEngine;
 namespace LionStudios.Editor.AutoBuilder
 {
     [Serializable]
-    public class IOSBuildSettings
+    public class IOSBuildSettings : BuildSettingsSectionBase
     {
         private enum Organization
         {

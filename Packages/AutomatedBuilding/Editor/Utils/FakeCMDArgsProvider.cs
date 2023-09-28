@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LionStudios.Editor.AutoBuilder
 {
     [Serializable]
-    public class FakeCMDArgsProvider : ICMDArgsProvider
+    public class FakeCMDArgsProvider : BuildSettingsSectionBase, ICMDArgsProvider
     {
         public enum Environment
         { 
