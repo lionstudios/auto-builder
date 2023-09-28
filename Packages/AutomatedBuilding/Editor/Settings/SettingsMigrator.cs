@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using LionStudios.Suite.Core;
 using System.Linq;
+using LionStudios.Suite.Editor;
+using EditorUtility = UnityEditor.EditorUtility;
 
 namespace LionStudios.Editor.AutoBuilder
 {
@@ -19,7 +21,36 @@ namespace LionStudios.Editor.AutoBuilder
         static readonly string IOS_SETTINGS_PATH = $"{SETTINGS_PATH}/IOSBuildSettings.asset";
         static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
 
-        //[InitializeOnLoadMethod]
+        [InitializeOnLoadMethod]
+        static void OnLoad()
+        {
+            if (AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.FakeCMDArgsProvider>(FAKE_CMD_ARGS_PATH) != null
+                || AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.CommonBuildSettings>(COMMON_SETTINGS_PATH) != null
+                || AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.IOSBuildSettings>(IOS_SETTINGS_PATH) != null
+                || AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.AndroidBuildSettings>(ANDROID_SETTINGS_PATH) != null)
+            {
+                bool showDialog = !SessionState.GetBool("Lion_BuildSettingsMigrationOptOut", false);
+                if (showDialog)
+                {
+                    int result = EditorUtility.DisplayDialogComplex("Outdated Build Settings Files",
+                        $"You have deprecated settings files in \n {SETTINGS_PATH_BASE}.\n\n" +
+                        $"Build Settings are now at \n LionStudios -> Settings Manager -> Builder.\n\n" +
+                        $"Migrate the old settings and delete the deprecated files?",
+                        "Migrate",
+                        "Ignore",
+                        "Ignore - Do not ask again for this session");
+                    if (result == 0)
+                    {
+                        Migrate();
+                    }
+                    else if (result == 2)
+                    {
+                        SessionState.SetBool("Lion_BuildSettingsMigrationOptOut", true);
+                    }
+                }
+            }
+        }
+        
         public static void Migrate()
         {
             LionSettingsService.InitializeService();
@@ -63,6 +94,7 @@ namespace LionStudios.Editor.AutoBuilder
             EditorUtility.SetDirty(settings); 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            LionSettingsManagerWindow.OpenManagerWindowAtTab("Builder");
         }
     }
 }
