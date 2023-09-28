@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using LionStudios.Suite.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,16 +15,21 @@ namespace LionStudios.Editor.AutoBuilder.Legacy
             {
                 wordWrap = true
             };
-            EditorGUILayout.LabelField("These settings are deprecated. Please use builder settings in lion settings (Unity Menu -> LionStudios -> Settings Manager)", myCustomStyle);
-            EditorGUILayout.LabelField("You can click the button below to migrate these settings to lion settings", myCustomStyle);
+            myCustomStyle.normal.textColor = Color.yellow;
+            EditorGUILayout.LabelField("These settings are deprecated. Please use the Builder tab in (LionStudios -> Settings Manager).", myCustomStyle);
+            GUILayout.Space(10f);
             if(GUILayout.Button("Migrate"))
             {
                 SettingsMigrator.Migrate();
+                LionSettingsManagerWindow.OpenManagerWindowAtTab("Builder");
             }
-            serializedObject.Update();
-
-            base.OnInspectorGUI();
-            
+            else
+            {
+                EditorGUILayout.LabelField("Click this button to migrate the old settings below to the Settings Manager and delete the deprecated files.", myCustomStyle);
+                serializedObject.Update();
+                GUILayout.Space(20f);
+                base.OnInspectorGUI();
+            }
         }
     }
 

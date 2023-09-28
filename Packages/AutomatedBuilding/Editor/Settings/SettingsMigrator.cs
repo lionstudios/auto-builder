@@ -9,9 +9,12 @@ namespace LionStudios.Editor.AutoBuilder
 {
     public class SettingsMigrator
     {
-        const string SETTINGS_PATH = "Assets/LionStudios/AutomatedBuilding/Editor";
+        
+        const string SETTINGS_PATH_BASE = "Assets/LionStudios/AutomatedBuilding";
+        
+        static readonly string SETTINGS_PATH = $"{SETTINGS_PATH_BASE}/Editor";
 
-        static readonly string FAKE_CMD_ARGS_PATH = $"{SETTINGS_PATH}/FakeCMDArgs.asset";//
+        static readonly string FAKE_CMD_ARGS_PATH = $"{SETTINGS_PATH}/FakeCMDArgs.asset";
         static readonly string COMMON_SETTINGS_PATH = $"{SETTINGS_PATH}/CommonBuildSettings.asset";
         static readonly string IOS_SETTINGS_PATH = $"{SETTINGS_PATH}/IOSBuildSettings.asset";
         static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
@@ -55,6 +58,7 @@ namespace LionStudios.Editor.AutoBuilder
                 settings.android = JsonUtility.FromJson<AndroidBuildSettings>(jsonString);
                 //AssetDatabase.DeleteAsset(ANDROID_SETTINGS_PATH);
             }
+            AssetDatabase.DeleteAsset(SETTINGS_PATH_BASE);
             settingsProvider.ApplySettings(settings); 
             EditorUtility.SetDirty(settings); 
             AssetDatabase.SaveAssets();
