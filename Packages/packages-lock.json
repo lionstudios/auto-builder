@@ -4,7 +4,18 @@
       "version": "file:AutomatedBuilding",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "com.lionstudios.release.lionkitcore": "2.6.5"
+      }
+    },
+    "com.lionstudios.release.lionkitcore": {
+      "version": "2.6.5",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      },
+      "url": "http://internal.packages.lionstudios.cc:4873"
     },
     "com.unity.collab-proxy": {
       "version": "1.14.18",
@@ -41,6 +52,13 @@
     "com.unity.ide.vscode": {
       "version": "1.2.5",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.0.2",
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using LionStudios.Suite.Core;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -27,7 +28,8 @@ namespace LionStudios.Editor.AutoBuilder
             get
             {
                 if (_iosBuildSettings == null)
-                    _iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                    //_iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                    _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iOS;
                 return _iosBuildSettings;
             }
         }
@@ -100,19 +102,6 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 Directory.CreateDirectory(buildPathDi.Parent.FullName);
             }
-        }
-
-        [InitializeOnLoadMethod]
-        private static void SetupProject()
-        {
-            if (AssetDatabase.LoadAllAssetsAtPath(IOS_SETTINGS_PATH).Length == 0)
-            {
-                Directory.CreateDirectory(SETTINGS_PATH);
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<IOSBuildSettings>(), IOS_SETTINGS_PATH);
-            }
-
-            if (!Directory.Exists(PROVISIONING_PROFILE_PATH))
-                Directory.CreateDirectory(PROVISIONING_PROFILE_PATH);
         }
 
 #if UNITY_IOS
@@ -190,20 +179,22 @@ namespace LionStudios.Editor.AutoBuilder
 
             proj.SetBuildProperty(mainTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
 
-
-            if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
+            if (iosBuildSettings.Capabilities.remoteNotifications.isRemoteNotificationEnabled)
             {
-                // Set Manual Provisioning Profiles One Signal Notification Service Extension
-                string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
-                proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
-                proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", oneSignalProductIdentifier);
-                proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
-                proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
-                proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
+                if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
+                {
+                    // Set Manual Provisioning Profiles One Signal Notification Service Extension
+                    string oneSignalTargetGuid = proj.TargetGuidByName("OneSignalNotificationServiceExtension");
+                    proj.SetBuildProperty(oneSignalTargetGuid, "ENABLE_BITCODE", "NO");
+                    proj.SetBuildProperty(oneSignalTargetGuid, "PRODUCT_BUNDLE_IDENTIFIER", oneSignalProductIdentifier);
+                    proj.AddBuildProperty(oneSignalTargetGuid, "CODE_SIGN_STYLE", "Manual");
+                    proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
+                    proj.SetBuildProperty(oneSignalTargetGuid, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", $"Apple Distribution: {iosBuildSettings.OrgName} ({iosBuildSettings.OrgTeamId})");
 
-                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
-                proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
-                proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
+                    proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
+                    proj.SetBuildProperty(oneSignalTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName);
+                    proj.SetBuildProperty(oneSignalTargetGuid, "DEVELOPMENT_TEAM", iosBuildSettings.OrgTeamId);
+                }
             }
 
             // Add search paths
@@ -298,25 +289,29 @@ namespace LionStudios.Editor.AutoBuilder
             string ApplicationIdentifier = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, IdentifierKey_MobileProvisional);
             ApplicationIdentifier = ApplicationIdentifier.Replace(OrgString, "");
             provisionalDictionary.SetString(ApplicationIdentifier, UUID);
-            if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
+            if (iosBuildSettings.Capabilities.remoteNotifications.isRemoteNotificationEnabled)
             {
-                if (!string.IsNullOrEmpty(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName))
+                if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
                 {
-                    string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
-                    string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
-                    if (ApplicationIdentifierOneSignal.Contains(OrgString))
+                    if (!string.IsNullOrEmpty(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName))
                     {
-                        ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
-                        oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
-                    }
+                        string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
+                        string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
+                        if (ApplicationIdentifierOneSignal.Contains(OrgString))
+                        {
+                            ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
+                            oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
+                        }
 
-                    provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
+                        provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
+                    }
                 }
             }
 
             #endregion
 
             document.WriteToFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+            Debug.Log("Created exportOptions.plist file at: " + EXPORT_OPTIONS_PATH + "exportOptions.plist");
         }
 
 
@@ -324,7 +319,7 @@ namespace LionStudios.Editor.AutoBuilder
         {
             string UUIDValue = "";
             bool fileExists = File.Exists(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
-            Debug.Log("string Path: " + PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
+            Debug.Log("Path for Provisioning Profile: " + PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
             if (fileExists)
             {
                 string[] data = File.ReadAllLines(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");

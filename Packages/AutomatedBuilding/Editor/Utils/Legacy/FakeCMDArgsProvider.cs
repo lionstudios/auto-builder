@@ -1,10 +1,8 @@
-using System;
 using UnityEngine;
 
-namespace LionStudios.Editor.AutoBuilder
+namespace LionStudios.Editor.AutoBuilder.Legacy
 {
-    [Serializable]
-    public class FakeCMDArgsProvider : BuildSettingsSectionBase, ICMDArgsProvider
+    public class FakeCMDArgsProvider : LegacySettingBase , ICMDArgsProvider
     {
         public enum Environment
         { 

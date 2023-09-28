@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LionStudios.Editor.AutoBuilder.AdapterStabilizer;
+using LionStudios.Suite.Core;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -29,7 +30,9 @@ namespace LionStudios.Editor.AutoBuilder
             get
             {
                 if (_commonBuildSettings == null)
-                    _commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
+                    //_commonBuildSettings = AssetDatabase.LoadAssetAtPath<CommonBuildSettings>(COMMON_SETTINGS_PATH);
+                    _commonBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().common;
+
                 return _commonBuildSettings;
             }
         }
@@ -136,21 +139,6 @@ namespace LionStudios.Editor.AutoBuilder
             finally
             {
                 AssetDatabase.StopAssetEditing();
-            }
-        }
-
-        [InitializeOnLoadMethod]
-        private static void SetupProject()
-        {
-            if (AssetDatabase.LoadAllAssetsAtPath(COMMON_SETTINGS_PATH).Length == 0)
-            {
-                Directory.CreateDirectory(SETTINGS_PATH);
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<CommonBuildSettings>(), COMMON_SETTINGS_PATH);
-            }
-            if (AssetDatabase.LoadAllAssetsAtPath(FAKE_CMD_ARGS_PATH).Length == 0)
-            {
-                Directory.CreateDirectory(SETTINGS_PATH);
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<FakeCMDArgsProvider>(), FAKE_CMD_ARGS_PATH);
             }
         }
 

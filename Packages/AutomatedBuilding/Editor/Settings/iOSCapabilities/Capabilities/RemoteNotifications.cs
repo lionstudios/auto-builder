@@ -6,7 +6,6 @@ using UnityEditor.iOS.Xcode;
 
 namespace LionStudios.Editor.AutoBuilder
 {
-
     [Serializable]
     public class RemoteNotificationsCapabilitySettings : CapabilitySettings
     {
@@ -17,8 +16,13 @@ namespace LionStudios.Editor.AutoBuilder
     [Serializable]
     public class RemoteNotificationsCapability : Capability<RemoteNotificationsCapabilitySettings>
     {
-        public RemoteNotificationsCapability(bool enabled) : base(enabled) {}
-        
+        public RemoteNotificationsCapability(bool enabled) : base(enabled)
+        {
+        }
+
+        public bool isRemoteNotificationEnabled => enabled;
+
+
 #if UNITY_IOS
         public override void AddCapability(ProjectCapabilityManager capabilityManager)
         {
@@ -27,5 +31,4 @@ namespace LionStudios.Editor.AutoBuilder
         }
 #endif
     }
-
 }

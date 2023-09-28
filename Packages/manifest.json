@@ -39,5 +39,14 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "Lion Studios",
+      "url": "http://internal.packages.lionstudios.cc:4873",
+      "scopes": [
+        "com.lionstudios.release"
+      ]
+    }
+  ]
 }

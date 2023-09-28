@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LionStudios.Editor.AutoBuilder
+namespace LionStudios.Editor.AutoBuilder.Legacy
 {
-    [Serializable]
-    public class IOSBuildSettings : BuildSettingsSectionBase
+    public class IOSBuildSettings : LegacySettingBase
     {
         private enum Organization
         {
@@ -33,7 +32,7 @@ namespace LionStudios.Editor.AutoBuilder
         public string ProvisioningProfileName = "";
 
         public Capabilities Capabilities;
-        
+
         public List<string> skAdIds = new List<string>();
 
 

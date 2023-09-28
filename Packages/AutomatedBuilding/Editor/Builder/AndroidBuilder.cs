@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using LionStudios.Suite.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +11,6 @@ namespace LionStudios.Editor.AutoBuilder
     {
         protected const string ANDROID_BUILD_LOCATION = "builds/android";
 
-        protected static readonly string ANDROID_SETTINGS_PATH = $"{SETTINGS_PATH}/AndroidBuildSettings.asset";
-
         private static AndroidBuildSettings _androidBuildSettings;
 
         protected static AndroidBuildSettings AndroidBuildSettings
@@ -19,7 +18,9 @@ namespace LionStudios.Editor.AutoBuilder
             get
             {
                 if (_androidBuildSettings == null)
-                    _androidBuildSettings = AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH);
+                    //_androidBuildSettings = AssetDatabase.LoadAssetAtPath<AndroidBuildSettings>(ANDROID_SETTINGS_PATH);
+                    _androidBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().android;
+
                 return _androidBuildSettings;
             }
         }
@@ -114,16 +115,6 @@ namespace LionStudios.Editor.AutoBuilder
             PlayerSettings.Android.keyaliasName = AndroidBuildSettings.KeystoreAlias;
             PlayerSettings.Android.keystorePass = CryptoHelper.Decrypt(AndroidBuildSettings.KeystorePassword);
             PlayerSettings.Android.keyaliasPass = CryptoHelper.Decrypt(AndroidBuildSettings.KeystoreAliasPassword);
-        }
-
-        [InitializeOnLoadMethod]
-        private static void SetupProject()
-        {
-            if (AssetDatabase.LoadAllAssetsAtPath(ANDROID_SETTINGS_PATH).Length == 0)
-            {
-                Directory.CreateDirectory(SETTINGS_PATH);
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<AndroidBuildSettings>(), ANDROID_SETTINGS_PATH);
-            }
         }
     }
 }

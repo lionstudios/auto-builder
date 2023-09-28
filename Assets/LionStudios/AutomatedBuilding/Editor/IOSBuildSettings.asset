@@ -15,45 +15,64 @@ MonoBehaviour:
   TargetName: Unity-iPhone
   _organization: 0
   ProvisioningProfileName: 
-  AllCapabilities:
-    addInAppPurchase: 0
-    addDataProtection: 0
-    addGameCenter: 0
-    addHealthKit: 0
-    addHomeKit: 0
-    addWirelessAccessoryConfig: 0
-    addAccessWifiInfo: 0
-    addPersonalVPN: 0
-    addInterAppAudio: 0
-    addSignInWithApple: 0
-    addSiri: 0
-    addRemoteNotification: 0
-    remoteNotificationSettings:
-      usingOneSignal: 0
-      oneSignalProvisionalProfileName: 
-    addAppGroup: 0
-    appGroupSettings:
-      appGroupIdentifiers: []
-    addiCloud: 0
-    iCloudSettings:
-      enableKeyValueStorage: 0
-      enableICloudDocument: 0
-      enableCloudKit: 1
-      addDefaultContainers: 1
-      customContainers: []
-    addMaps: 0
-    mapSettings:
-      mapOptions: 0
-    addWallet: 0
-    walletSettings:
-      passSubsets: []
-    addApplePay: 0
-    applePaySettings:
-      merchants: []
-    addAssociatedDomains: 0
-    associatedDomainSettings:
-      domains: []
-    addKeychainSharing: 0
-    keychainSharingSettings:
-      accessGroups: []
+  Capabilities:
+    inAppPurchase:
+      enabled: 1
+    dataProtection:
+      enabled: 0
+    gameCenter:
+      enabled: 0
+    healthKit:
+      enabled: 0
+    homeKit:
+      enabled: 0
+    wirelessAccessoryConfiguration:
+      enabled: 0
+    accessWifiInformation:
+      enabled: 0
+    personalVPN:
+      enabled: 0
+    interAppAudio:
+      enabled: 0
+    signInWithApple:
+      enabled: 0
+    siri:
+      enabled: 0
+    remoteNotifications:
+      enabled: 0
+      settings:
+        usingOneSignal: 0
+        oneSignalProvisionalProfileName: 
+    iCloud:
+      enabled: 0
+      settings:
+        enableKeyValueStorage: 0
+        enableICloudDocument: 0
+        enableCloudKit: 1
+        addDefaultContainers: 1
+        customContainers: []
+    appGroups:
+      enabled: 0
+      settings:
+        appGroupIdentifiers: []
+    maps:
+      enabled: 0
+      settings:
+        msg: You need to switch to iOS platform in order to set these settings
+    wallet:
+      enabled: 0
+      settings:
+        passSubsets: []
+    applePay:
+      enabled: 0
+      settings:
+        merchants: []
+    associatedDomains:
+      enabled: 0
+      settings:
+        domains: []
+    keychainSharing:
+      enabled: 0
+      settings:
+        accessGroups: []
   skAdIds: []

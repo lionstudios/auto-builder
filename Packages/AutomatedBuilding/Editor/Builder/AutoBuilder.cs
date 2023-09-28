@@ -1,5 +1,6 @@
 ﻿using System;
 using LionStudios.Editor.AutoBuilder;
+using LionStudios.Suite.Core;
 using UnityEditor;
 
 public static class AutoBuilder
@@ -26,7 +27,8 @@ public static class AutoBuilder
     public static async void BuildAndroidTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.Android);
-        var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
+        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().local;
+
         _builder = new AndroidBuilder(fakeCMDArgsProvider);
         await _builder.Build();
     }
@@ -35,7 +37,8 @@ public static class AutoBuilder
     public static async void BuildIOSTest()
     {
         OnBuildTriggered?.Invoke(BuildTargetGroup.iOS);
-        var fakeCMDArgsProvider = AssetDatabase.LoadAssetAtPath<FakeCMDArgsProvider>(Builder.FAKE_CMD_ARGS_PATH);
+        var fakeCMDArgsProvider = LionSettingsService.GetSettings<AutoBuilderSettings>().local;
+
         _builder = new IOSBuilder(fakeCMDArgsProvider);
         await _builder.Build();
     }
