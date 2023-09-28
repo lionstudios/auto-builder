@@ -21,7 +21,8 @@ namespace LionStudios.Editor.AutoBuilder.Legacy
             if(GUILayout.Button("Migrate"))
             {
                 SettingsMigrator.Migrate();
-                LionSettingsManagerWindow.OpenManagerWindowAtTab("Builder");
+                // TODO: uncomment once OpenManagerWindowAtTab is in the release version of Lion Core
+                // LionSettingsManagerWindow.OpenManagerWindowAtTab("Builder");
             }
             else
             {
