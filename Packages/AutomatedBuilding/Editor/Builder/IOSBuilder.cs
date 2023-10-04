@@ -30,10 +30,7 @@ namespace LionStudios.Editor.AutoBuilder
                 if (_iosBuildSettings == null)
                 {
                     _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iOS;
-                    // Debug.Log("Settings is not null anymore.." + _iosBuildSettings);
                 }
-                //_iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
-
                 return _iosBuildSettings;
             }
         }
@@ -339,7 +336,6 @@ namespace LionStudios.Editor.AutoBuilder
             }
 
             bool fileExists = File.Exists(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
-            //Debug.Log("Path for Provisioning Profile: " + PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
             if (fileExists)
             {
                 string[] data = File.ReadAllLines(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
