@@ -371,7 +371,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             string mediationFolderFullPath = Application.dataPath + mediationFolderPath;
             if (!Directory.Exists(mediationFolderFullPath))
             {
-                Debug.LogError("Max sdk not found");
+                Debug.LogWarning("Max sdk not found");
                 return;
             }
 
