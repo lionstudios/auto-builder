@@ -28,8 +28,9 @@ namespace LionStudios.Editor.AutoBuilder
             get
             {
                 if (_iosBuildSettings == null)
-                    //_iosBuildSettings = AssetDatabase.LoadAssetAtPath<IOSBuildSettings>(IOS_SETTINGS_PATH);
+                {
                     _iosBuildSettings = LionSettingsService.GetSettings<AutoBuilderSettings>().iOS;
+                }
                 return _iosBuildSettings;
             }
         }
@@ -38,8 +39,10 @@ namespace LionStudios.Editor.AutoBuilder
         protected override ScriptingImplementation ScriptingImplementation => ScriptingImplementation.IL2CPP;
         protected override BuildTargetGroup BuildTargetGroup => BuildTargetGroup.iOS;
 
-        private const string EXPORT_OPTIONS_PATH = "buildTools/";
-        private const string PROVISIONING_PROFILE_PATH = "ProvisioningProfiles/";
+        private static string EXPORT_OPTIONS_PATH => Path.GetFullPath(Path.Combine(Application.dataPath, "../buildTools/"));
+
+        private static string PROVISIONING_PROFILE_PATH => Path.GetFullPath(Path.Combine(Application.dataPath, "../ProvisioningProfiles/"));
+
 
         public IOSBuilder(ICMDArgsProvider cmdArgsProvider) : base(cmdArgsProvider)
         {
@@ -278,7 +281,6 @@ namespace LionStudios.Editor.AutoBuilder
             rootDict.SetBoolean("uploadSymbols", true);
             rootDict.CreateDict("provisioningProfiles");
 
-            var provisionalDictionary = rootDict.values["provisioningProfiles"].AsDict();
 
             #region ProvisionalProfile Logic
 
@@ -288,38 +290,52 @@ namespace LionStudios.Editor.AutoBuilder
             string UUID = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, UUIDKey_MobileProvisional);
             string ApplicationIdentifier = GetValueFromProvisionalProfile(iosBuildSettings.ProvisioningProfileName, IdentifierKey_MobileProvisional);
             ApplicationIdentifier = ApplicationIdentifier.Replace(OrgString, "");
-            provisionalDictionary.SetString(ApplicationIdentifier, UUID);
-            if (iosBuildSettings.Capabilities.remoteNotifications.isRemoteNotificationEnabled)
+            if (!string.IsNullOrEmpty(UUID) && !string.IsNullOrEmpty(ApplicationIdentifier))
             {
-                if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
+                var provisionalDictionary = rootDict.values["provisioningProfiles"].AsDict();
+                provisionalDictionary.SetString(ApplicationIdentifier, UUID);
+                if (iosBuildSettings.Capabilities.remoteNotifications.isRemoteNotificationEnabled)
                 {
-                    if (!string.IsNullOrEmpty(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName))
+                    if (iosBuildSettings.Capabilities.remoteNotifications.settings.usingOneSignal)
                     {
-                        string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
-                        string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
-                        if (ApplicationIdentifierOneSignal.Contains(OrgString))
+                        if (!string.IsNullOrEmpty(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName))
                         {
-                            ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
-                            oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
-                        }
+                            string UUIDOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, UUIDKey_MobileProvisional);
+                            string ApplicationIdentifierOneSignal = GetValueFromProvisionalProfile(iosBuildSettings.Capabilities.remoteNotifications.settings.oneSignalProvisionalProfileName, IdentifierKey_MobileProvisional);
+                            if (ApplicationIdentifierOneSignal.Contains(OrgString))
+                            {
+                                ApplicationIdentifierOneSignal = ApplicationIdentifierOneSignal.Replace(OrgString, "");
+                                oneSignalProductIdentifier = ApplicationIdentifierOneSignal;
+                            }
 
-                        provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
+                            provisionalDictionary.SetString(ApplicationIdentifierOneSignal, UUIDOneSignal);
+                        }
                     }
                 }
+
+                #endregion
+
+                document.WriteToFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
+                Debug.Log("Created exportOptions.plist file at: " + EXPORT_OPTIONS_PATH + "exportOptions.plist");
             }
-
-            #endregion
-
-            document.WriteToFile(EXPORT_OPTIONS_PATH + "exportOptions.plist");
-            Debug.Log("Created exportOptions.plist file at: " + EXPORT_OPTIONS_PATH + "exportOptions.plist");
+            else
+            {
+                Debug.LogError($"Could not create ExportOptions.plist, Provisional Profile required to insert data into the ExportOptions.plist");
+            }
         }
 
 
         private static string GetValueFromProvisionalProfile(string ProvisionalProfileName, string KeyString)
         {
             string UUIDValue = "";
+            bool directoryExists = Directory.Exists(PROVISIONING_PROFILE_PATH);
+
+            if (!directoryExists)
+            {
+                Directory.CreateDirectory(PROVISIONING_PROFILE_PATH);
+            }
+
             bool fileExists = File.Exists(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
-            Debug.Log("Path for Provisioning Profile: " + PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
             if (fileExists)
             {
                 string[] data = File.ReadAllLines(PROVISIONING_PROFILE_PATH + ProvisionalProfileName + ".mobileprovision");
@@ -343,7 +359,7 @@ namespace LionStudios.Editor.AutoBuilder
             }
             else
             {
-                Debug.LogError($"Put ProvisionalProfile Named {iosBuildSettings.ProvisioningProfileName} in {Application.dataPath + "/" + PROVISIONING_PROFILE_PATH}");
+                Debug.LogError($"Provisional Profile not found \n Put ProvisionalProfile \t Named {iosBuildSettings.ProvisioningProfileName} at \t Location: {PROVISIONING_PROFILE_PATH}");
             }
 
             return UUIDValue;

@@ -13,8 +13,6 @@ namespace LionStudios.Editor.AutoBuilder
     {
         public string Name => "Builder";
 
-        private int minAutoSaveInterval = 60;
-
         public ILionSettingsInfo GetSettings()
         {
             return Settings;
