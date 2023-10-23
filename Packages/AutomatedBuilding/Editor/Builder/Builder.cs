@@ -284,25 +284,25 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
 #if UNITY_EDITOR_WIN
-    private static void OpenFolder(string path)
-    {
-        var winPathDI = new DirectoryInfo(new DirectoryInfo(path).FullName);
-
-        try
+        private static void OpenFolder(string path)
         {
-            System.Diagnostics.Process.Start("explorer.exe", winPathDI.Exists ? winPathDI.FullName : $"/select,{winPathDI.FullName}");
-        }
-        catch (System.ComponentModel.Win32Exception e)
-        {
-            // tried to open win explorer in mac
-            // just silently skip error
-            // we currently have no platform define for the current OS we are in, so we resort to this
-            e.HelpLink = ""; // do anything with this variable to silence warning about not using it
-        }
-    }
-#endif
+            var winPathDI = new DirectoryInfo(new DirectoryInfo(path).FullName);
 
-#if UNITY_EDITOR_OSX
+            try
+            {
+                System.Diagnostics.Process.Start("explorer.exe", winPathDI.Exists ? winPathDI.FullName : $"/select,{winPathDI.FullName}");
+            }
+            catch (System.ComponentModel.Win32Exception e)
+            {
+                // tried to open win explorer in mac
+                // just silently skip error
+                // we currently have no platform define for the current OS we are in, so we resort to this
+                e.HelpLink = ""; // do anything with this variable to silence warning about not using it
+            }
+        }
+
+#else
+        
         private static void OpenFolder(string path) //copied from match3
         {
             bool openInsidesOfFolder = false;
