@@ -24,6 +24,11 @@ namespace LionStudios.Editor.AutoBuilder
         [InitializeOnLoadMethod]
         static void OnLoad()
         {
+            EditorApplication.delayCall += CheckForOldSettings;
+        }
+        
+        static void CheckForOldSettings()
+        {
             if (AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.FakeCMDArgsProvider>(FAKE_CMD_ARGS_PATH) != null
                 || AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.CommonBuildSettings>(COMMON_SETTINGS_PATH) != null
                 || AssetDatabase.LoadAssetAtPath<LionStudios.Editor.AutoBuilder.Legacy.IOSBuildSettings>(IOS_SETTINGS_PATH) != null
