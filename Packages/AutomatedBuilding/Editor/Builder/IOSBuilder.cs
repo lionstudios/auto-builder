@@ -49,6 +49,7 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         private static string oneSignalProductIdentifier;
+        private static bool isManualBuild = true;
 
         ~IOSBuilder()
         {
@@ -74,6 +75,7 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 PlayerSettings.bundleVersion = cmdParamsMap["versionNumber"];
             }
+            isManualBuild = false;
 
             PlayerSettings.iOS.buildNumber = buildNumber;
 
@@ -113,6 +115,12 @@ namespace LionStudios.Editor.AutoBuilder
         public static void OnPostProcessBuild(BuildTarget buildTarget, string path) //copied from KingWing the way it is
         {
             Debug.Log($"<---------->Path > {path}");
+
+            if(isManualBuild)
+            {
+                return;
+            }
+            isManualBuild = true;
 
             if (buildTarget != BuildTarget.iOS)
             {
@@ -176,7 +184,7 @@ namespace LionStudios.Editor.AutoBuilder
             for (int i = 0; i < 2; i++)
             {
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.ProvisioningProfileName);
-                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileName);
+                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileName);    
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", iosBuildSettings.ProvisioningProfileName);
             }
 
