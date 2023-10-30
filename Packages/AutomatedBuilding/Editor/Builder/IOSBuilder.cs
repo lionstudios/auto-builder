@@ -114,6 +114,11 @@ namespace LionStudios.Editor.AutoBuilder
         {
             Debug.Log($"<---------->Path > {path}");
 
+            if(!Builder.isLionBuild)
+            {
+                return;
+            }
+
             if (buildTarget != BuildTarget.iOS)
             {
                 return;
@@ -176,7 +181,7 @@ namespace LionStudios.Editor.AutoBuilder
             for (int i = 0; i < 2; i++)
             {
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_SPECIFIER", iosBuildSettings.ProvisioningProfileName);
-                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileName);
+                proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE_APP", iosBuildSettings.ProvisioningProfileName);    
                 proj.SetBuildProperty(mainTargetGuid, "PROVISIONING_PROFILE", iosBuildSettings.ProvisioningProfileName);
             }
 

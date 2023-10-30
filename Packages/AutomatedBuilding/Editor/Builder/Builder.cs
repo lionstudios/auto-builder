@@ -23,6 +23,8 @@ namespace LionStudios.Editor.AutoBuilder
         private readonly ICMDArgsProvider _cmdArgsProvider;
         private readonly bool _isTestEditorBuild;
 
+        internal static bool isLionBuild = false;
+
         protected static CommonBuildSettings _commonBuildSettings;
 
         protected static CommonBuildSettings CommonBuildSettings
@@ -110,6 +112,7 @@ namespace LionStudios.Editor.AutoBuilder
         {
             try
             {
+                isLionBuild = true;
                 AssetDatabase.StartAssetEditing();
                 LionSettingsService.InitializeService();
                 var buildPlayerOptions = Initialize(BuildTargetGroup, CommonBuildSettings.DevAdditionalDefSymbols,
@@ -142,6 +145,7 @@ namespace LionStudios.Editor.AutoBuilder
             }
             finally
             {
+                isLionBuild = false;
                 AssetDatabase.StopAssetEditing();
             }
         }
