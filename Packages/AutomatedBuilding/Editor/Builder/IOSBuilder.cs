@@ -49,7 +49,6 @@ namespace LionStudios.Editor.AutoBuilder
         }
 
         private static string oneSignalProductIdentifier;
-        private static bool isManualBuild = true;
 
         ~IOSBuilder()
         {
@@ -75,7 +74,6 @@ namespace LionStudios.Editor.AutoBuilder
             {
                 PlayerSettings.bundleVersion = cmdParamsMap["versionNumber"];
             }
-            isManualBuild = false;
 
             PlayerSettings.iOS.buildNumber = buildNumber;
 
@@ -116,11 +114,10 @@ namespace LionStudios.Editor.AutoBuilder
         {
             Debug.Log($"<---------->Path > {path}");
 
-            if(isManualBuild)
+            if(!Builder.isLionBuild)
             {
                 return;
             }
-            isManualBuild = true;
 
             if (buildTarget != BuildTarget.iOS)
             {
