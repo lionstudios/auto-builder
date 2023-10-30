@@ -110,7 +110,6 @@ namespace LionStudios.Editor.AutoBuilder
 
         public async Task Build()
         {
-            LionSettingsService.ClearCache();
             try
             {
                 isLionBuild = true;
