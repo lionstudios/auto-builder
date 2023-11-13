@@ -340,12 +340,20 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
             
             List<string> privacyLinks = new List<string>();
-            privacyLinks.Add("https://www.applovin.com/privacy/");
+            AdNetwork applovinNetwork = AdNetworks.FirstOrDefault(x => x.NetworkName == "Applovin");
+            if(applovinNetwork != null)
+            {
+                privacyLinks.Add(applovinNetwork.PrivacyLinks);
+            }
 
             Type amazonAdsType = GetType("AmazonAds.Amazon");
             if(amazonAdsType != null)
             {
-                privacyLinks.Add("https://advertising.amazon.com/resources/ad-policy/en/gdpr");
+                AdNetwork amazonNetwork = AdNetworks.FirstOrDefault(x => x.NetworkName == "AMAZON_MARKETPLACE_NETWORK");
+                if(amazonNetwork != null)
+                {
+                    privacyLinks.Add(amazonNetwork.PrivacyLinks);
+                }
             }
 
             foreach (AdNetwork adNetwork in AdNetworks)
