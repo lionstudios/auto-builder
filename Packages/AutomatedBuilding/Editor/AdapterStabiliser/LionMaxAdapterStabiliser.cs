@@ -340,7 +340,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
             
             List<string> privacyLinks = new List<string>();
-            AdNetwork applovinNetwork = AdNetworks.FirstOrDefault(x => x.NetworkCodeName == "Applovin");
+            AdNetwork applovinNetwork = AdNetworks.FirstOrDefault(x => x.NetworkCodeName == "AppLovin");
             if(applovinNetwork != null)
             {
                 privacyLinks.Add(applovinNetwork.PrivacyLinks);
