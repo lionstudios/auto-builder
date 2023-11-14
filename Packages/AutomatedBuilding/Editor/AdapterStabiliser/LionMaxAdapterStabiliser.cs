@@ -340,6 +340,22 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
             }
             
             List<string> privacyLinks = new List<string>();
+            AdNetwork applovinNetwork = AdNetworks.FirstOrDefault(x => x.NetworkCodeName == "AppLovin");
+            if(applovinNetwork != null)
+            {
+                privacyLinks.Add(applovinNetwork.PrivacyLinks);
+            }
+
+            Type amazonAdsType = GetType("AmazonAds.Amazon");
+            if(amazonAdsType != null)
+            {
+                AdNetwork amazonNetwork = AdNetworks.FirstOrDefault(x => x.NetworkCodeName == "Amazon");
+                if(amazonNetwork != null)
+                {
+                    privacyLinks.Add(amazonNetwork.PrivacyLinks);
+                }
+            }
+
             foreach (AdNetwork adNetwork in AdNetworks)
             {
                 if (adNetwork.InstalledAndroidVersion == null && adNetwork.InstalledIosVersion == null)
