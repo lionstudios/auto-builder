@@ -308,9 +308,7 @@ namespace LionStudios.Editor.AutoBuilder.AdapterStabilizer
                 if (type != null)
                     return type;
             }
-
-            Debug.LogError($"{typeName} not found!");
-
+            
             return null;
         }
 
